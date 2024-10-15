@@ -47,3 +47,17 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit.
    ```
 
 3. Access the application at [http://localhost:3000](http://localhost:3000)
+
+## Description of the tech stack
+
+### Frontend
+
+Uses a single page application (SPA) with Solid.js as the UI-framework. Vite as the build tool. Tailwindcss for the styling.
+
+### Backend
+
+A Node.js server using Hono as the web framework. PostgreSQL as the primary database and Redis for caching, analytics and session management.
+
+### CI/CD
+
+Uses GitHub Actions for CI/CD.
