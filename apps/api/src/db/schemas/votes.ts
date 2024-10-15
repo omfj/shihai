@@ -1,20 +1,26 @@
 import { pgTable, primaryKey, text, timestamp } from "drizzle-orm/pg-core";
-import { nanoid } from "nanoid";
-import { relations } from "drizzle-orm";
+import { relations, type InferInsertModel, type InferSelectModel } from "drizzle-orm";
 import { polls, users, voteOptions } from ".";
+import { createInsertSchema, createSelectSchema } from "drizzle-zod";
 
 export const votes = pgTable(
   "vote",
   {
     userId: text("user_id")
       .notNull()
-      .references(() => users.id),
+      .references(() => users.id, {
+        onDelete: "cascade",
+      }),
     pollId: text("poll_id")
       .notNull()
-      .references(() => polls.id),
+      .references(() => polls.id, {
+        onDelete: "cascade",
+      }),
     voteOptionId: text("vote_option_id")
       .notNull()
-      .references(() => voteOptions.id),
+      .references(() => voteOptions.id, {
+        onDelete: "cascade",
+      }),
     createdAt: timestamp("created_at")
       .notNull()
       .$defaultFn(() => new Date()),
@@ -38,3 +44,9 @@ export const votesRelations = relations(votes, ({ one }) => ({
     references: [voteOptions.id],
   }),
 }));
+
+export type Vote = InferSelectModel<typeof votes>;
+export type VoteInsert = InferInsertModel<typeof votes>;
+
+export const VoteSchema = createSelectSchema(votes);
+export const VoteInsertSchema = createInsertSchema(votes);

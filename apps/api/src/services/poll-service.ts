@@ -30,7 +30,11 @@ export class PollService {
   }
 
   static async create(poll: PollInsert) {
-    await db.insert(polls).values(poll);
+    return await db
+      .insert(polls)
+      .values(poll)
+      .returning()
+      .then((rows) => rows[0]);
   }
 
   static async update(id: string, poll: PollInsert) {
