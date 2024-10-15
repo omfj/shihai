@@ -8,14 +8,14 @@ on:
     branches:
       - main
 
+env:
+  DATABASE_URL: postgres://postgres:postgres@localhost:5432/shihai
+  REDIS_URL: redis://:redis@localhost:6379
+
 jobs:
   ci:
     name: 💚 CI
     runs-on: ubuntu-latest
-
-    env:
-      DATABASE_URL: postgres://postgres:postgres@localhost:5432/shihai
-      REDIS_URL: redis://:redis@localhost:6379
 
     services:
       db:

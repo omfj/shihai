@@ -16,14 +16,6 @@
     "typecheck": {},
     "format": {},
     "format:check": {},
-    "lint": {},
-    "db:generate": {
-      "persistent": false,
-      "cache": false
-    },
-    "db:migrate": {
-      "persistent": false,
-      "cache": false
-    }
+    "lint": {}
   }
 }
