@@ -15,7 +15,6 @@
     },
     "typecheck": {},
     "format": {},
-    "format:check": {},
-    "lint": {}
+    "format:check": {}
   }
 }
