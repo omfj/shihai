@@ -1,4 +1,4 @@
-# SHIHAI - Worlds most advanced polling system
+# SHIHAI - The world's most advanced polling system
 
 ## Introduction
 
