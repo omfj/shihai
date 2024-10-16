@@ -1,5 +1,5 @@
-import { db } from "../db/drizzle";
-import { voteOptions, type VoteOptionInsert } from "../db/schemas";
+import { db } from "@/db/drizzle";
+import { voteOptions, type VoteOptionInsert } from "@/db/schemas";
 
 export class VoteOptionService {
   static async create(voteOption: VoteOptionInsert) {

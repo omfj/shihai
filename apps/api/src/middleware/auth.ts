@@ -1,7 +1,7 @@
 import { createMiddleware } from "hono/factory";
-import type { Bindings, Variables } from "../lib/app";
-import type { UserWithoutPassword } from "../db/schemas";
-import { db } from "../db/drizzle";
+import type { Bindings, Variables } from "@/lib/app";
+import type { UserWithoutPassword } from "@/db/schemas";
+import { db } from "@/db/drizzle";
 
 export const auth = () => {
   return createMiddleware<{

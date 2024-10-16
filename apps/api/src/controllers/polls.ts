@@ -1,10 +1,10 @@
-import { PollService } from "../services/poll-service";
-import { type PollInsert } from "../db/schemas/polls";
-import { auth } from "../middleware/auth";
-import { CreatePollSchema } from "../lib/validators";
-import { VoteOptionService } from "../services/vote-option-service";
-import { VoteService } from "../services/vote-service";
-import { createApp } from "../lib/app";
+import { PollService } from "@/services/poll-service";
+import { type PollInsert } from "@/db/schemas/polls";
+import { auth } from "@/middleware/auth";
+import { CreatePollSchema } from "@/lib/validators";
+import { VoteOptionService } from "@/services/vote-option-service";
+import { VoteService } from "@/services/vote-service";
+import { createApp } from "@/lib/app";
 
 const app = createApp();
 
