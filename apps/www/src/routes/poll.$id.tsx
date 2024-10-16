@@ -19,11 +19,14 @@ export function Poll() {
       return [];
     }
 
-    const votes = pollQuery.data?.votes.reduce((acc, vote) => {
-      const optionId = vote.voteOptionId;
-      acc[optionId] = (acc[optionId] || 0) + 1;
-      return acc;
-    }, {} as Record<string, number>)!;
+    const votes = pollQuery.data?.votes.reduce(
+      (acc, vote) => {
+        const optionId = vote.voteOptionId;
+        acc[optionId] = (acc[optionId] || 0) + 1;
+        return acc;
+      },
+      {} as Record<string, number>,
+    )!;
 
     return options.map((option) => ({
       ...option,
@@ -32,7 +35,7 @@ export function Poll() {
   });
 
   const votedOption = createMemo(() =>
-    pollQuery.data?.votes.find((vote) => vote.userId === user?.id)
+    pollQuery.data?.votes.find((vote) => vote.userId === user?.id),
   );
 
   const handleVote = async (optionId: string) => {
@@ -60,9 +63,8 @@ export function Poll() {
                   class={cn(
                     "w-full bg-gray-100 hover:bg-gray-200 transition-colors rounded-lg px-3 py-1 mb-2",
                     {
-                      "bg-green-200 hover:bg-green-300":
-                        votedOption()?.voteOptionId === option.id,
-                    }
+                      "bg-green-200 hover:bg-green-300": votedOption()?.voteOptionId === option.id,
+                    },
                   )}
                 >
                   {option.votes} {option.caption}
