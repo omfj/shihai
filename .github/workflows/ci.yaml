@@ -62,5 +62,8 @@ jobs:
       - name: 💄 Check style
         run: pnpm format:check
 
-      - name: ⚙️ Buld applications
+      - name: 🧪 Unit tests
+        run: pnpm test:unit
+
+      - name: ⚙️ Build applications
         run: pnpm build

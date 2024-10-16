@@ -1,6 +1,6 @@
 import { eq } from "drizzle-orm";
-import { db } from "../db/drizzle";
-import { polls, type PollInsert } from "../db/schemas/polls";
+import { db } from "@/db/drizzle";
+import { polls, type PollInsert } from "@/db/schemas/polls";
 
 export class PollService {
   static async findAll() {
@@ -38,7 +38,12 @@ export class PollService {
   }
 
   static async update(id: string, poll: PollInsert) {
-    await db.update(polls).set(poll).where(eq(polls.id, id));
+    return await db
+      .update(polls)
+      .set(poll)
+      .where(eq(polls.id, id))
+      .returning()
+      .then((rows) => rows[0]);
   }
 
   static async delete(id: string) {
