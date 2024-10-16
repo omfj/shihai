@@ -8,3 +8,8 @@ export const CreatePollSchema = z.object({
     order: true,
   }).array(),
 });
+
+export const LoginSchema = z.object({
+  username: z.string().min(2),
+  password: z.string().min(2),
+});

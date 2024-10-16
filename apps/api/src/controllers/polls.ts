@@ -52,7 +52,7 @@ app.get("/poll/:id", async (c) => {
 app.post("/poll/:pollId/vote/:optionId", auth(), async (c) => {
   const pollId = c.req.param("pollId");
   const optionId = c.req.param("optionId");
-  const userId = c.var.user.id;
+  const userId = c.var.auth.user.id;
 
   const poll = await PollService.find(pollId);
 

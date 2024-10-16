@@ -1,10 +1,18 @@
+import type { User, Session } from "@/db/schemas";
 import { Hono, type Context } from "hono";
-import type { UserWithoutPassword } from "../db/schemas";
 
 export type Bindings = {};
 
 export type Variables = {
-  user: UserWithoutPassword | null;
+  auth:
+    | {
+        user: User;
+        session: Session;
+      }
+    | {
+        user: null;
+        session: null;
+      };
 };
 
 export type AppEnv = {
@@ -14,6 +22,8 @@ export type AppEnv = {
 
 export type AppContext = Context<AppEnv>;
 
-export const createApp = () => {
+export type AnyAppContext = Context<any, any, {}>;
+
+export function createApp() {
   return new Hono<AppEnv>();
-};
+}

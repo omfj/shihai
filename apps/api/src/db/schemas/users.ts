@@ -10,10 +10,11 @@ export const users = pgTable(
     id: text().notNull().primaryKey().$defaultFn(nanoid),
     username: text().notNull(),
     email: text().notNull(),
-    githubId: text("github_id").notNull(),
+    password: text().notNull(),
   },
   (table) => ({
-    ghIdIdx: uniqueIndex("github_id_idx").on(table.githubId),
+    usernameUnique: uniqueIndex("username_unique").on(table.username),
+    emailUnique: uniqueIndex("email_unique").on(table.email),
   }),
 );
 

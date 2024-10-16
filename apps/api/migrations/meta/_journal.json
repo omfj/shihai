@@ -8,6 +8,13 @@
       "when": 1729008018042,
       "tag": "0000_safe_slyde",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1729106616256,
+      "tag": "0001_wealthy_lethal_legion",
+      "breakpoints": true
     }
   ]
 }
