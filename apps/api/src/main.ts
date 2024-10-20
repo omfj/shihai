@@ -4,14 +4,21 @@ import { logger } from "hono/logger";
 import { cors } from "hono/cors";
 import { createApp } from "./lib/app";
 
-import pollsController from "./controllers/polls";
+import pollsController from "./controllers/polls.controller";
+import authController from "./controllers/auth.controller";
 
 const app = createApp();
 
 app.use(logger());
-app.use(cors());
+app.use(
+  cors({
+    origin: ["http://localhost:3000"],
+    credentials: true,
+  }),
+);
 
 app.route("/", pollsController);
+app.route("/", authController);
 
 const PORT = 8000;
 

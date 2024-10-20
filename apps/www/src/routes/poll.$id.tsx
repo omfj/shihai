@@ -1,18 +1,23 @@
 import { A, useParams } from "@solidjs/router";
-import { createPollQuery, createVoteMutation } from "../api/poll/poll.query";
-import { For, createMemo } from "solid-js";
+import { createVoteMutation } from "../api/poll/poll.query";
+import { For } from "solid-js";
 import { Title } from "../components/seo/title";
 import { getCurrentUser } from "../api/auth/auth.query";
 import { cn } from "../lib/cn";
 import { queryClient } from "../lib/query-client";
+import { createQuery } from "@tanstack/solid-query";
+import { fetchPoll } from "../api/poll/poll.fetch";
 
 export function Poll() {
   const params = useParams();
   const user = getCurrentUser();
-  const pollQuery = createPollQuery(params.id);
+  const pollQuery = createQuery(() => ({
+    queryKey: ["poll", params.id],
+    queryFn: () => fetchPoll(params.id),
+  }));
   const voteMutation = createVoteMutation();
 
-  const options = createMemo(() => {
+  const options = () => {
     const options = pollQuery.data?.options.sort((a, b) => a.order - b.order);
 
     if (!options) {
@@ -26,22 +31,43 @@ export function Poll() {
         return acc;
       },
       {} as Record<string, number>,
-    )!;
+    );
 
     return options.map((option) => ({
       ...option,
-      votes: votes[option.id] || 0,
+      votes: votes?.[option.id] || 0,
     }));
-  });
+  };
 
-  const votedOption = createMemo(() =>
-    pollQuery.data?.votes.find((vote) => vote.userId === user?.id),
-  );
+  const votedOption = () => pollQuery.data?.votes.find((vote) => vote.userId === user?.id);
 
   const handleVote = async (optionId: string) => {
     await voteMutation.mutateAsync({ pollId: params.id, optionId });
     queryClient.invalidateQueries({ queryKey: ["poll", params.id] });
   };
+
+  if (pollQuery.isLoading) {
+    return (
+      <>
+        <Title>Loading...</Title>
+
+        <p>Loading...</p>
+      </>
+    );
+  }
+
+  if (pollQuery.isError) {
+    return (
+      <>
+        <Title>Poll not found</Title>
+        <div>
+          <A href="/" class="block text-blue-500 hover:underline">
+            &larr; Back
+          </A>
+        </div>
+      </>
+    );
+  }
 
   return (
     <>

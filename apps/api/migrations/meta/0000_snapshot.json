@@ -1,5 +1,5 @@
 {
-  "id": "c2153044-ea20-4400-89a7-0ff2c6d82f58",
+  "id": "6652f127-a166-4265-8607-06cdc8d87b95",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -76,19 +76,34 @@
           "primaryKey": false,
           "notNull": true
         },
-        "github_id": {
-          "name": "github_id",
+        "password": {
+          "name": "password",
           "type": "text",
           "primaryKey": false,
           "notNull": true
         }
       },
       "indexes": {
-        "github_id_idx": {
-          "name": "github_id_idx",
+        "username_unique": {
+          "name": "username_unique",
           "columns": [
             {
-              "expression": "github_id",
+              "expression": "username",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "email_unique": {
+          "name": "email_unique",
+          "columns": [
+            {
+              "expression": "email",
               "isExpression": false,
               "asc": true,
               "nulls": "last"

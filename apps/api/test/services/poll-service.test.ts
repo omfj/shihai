@@ -1,5 +1,5 @@
 import { test, expect } from "vitest";
-import { PollService } from "@/services/poll-service";
+import { PollService } from "@/services/poll.service";
 
 test("create poll", async () => {
   const poll = await PollService.create({

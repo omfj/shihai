@@ -6,7 +6,7 @@ export async function fetchPolls() {
 }
 
 export async function fetchPoll(id: string) {
-  return await api.get(`poll/${id}`).json<Poll>();
+  return await api.get(`poll/${id}`).json<Poll | null>();
 }
 
 export async function mutatePollVote(pollId: string, optionId: string) {

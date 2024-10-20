@@ -13,7 +13,7 @@ CREATE TABLE IF NOT EXISTS "user" (
 	"id" text PRIMARY KEY NOT NULL,
 	"username" text NOT NULL,
 	"email" text NOT NULL,
-	"github_id" text NOT NULL
+	"password" text NOT NULL
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "vote_option" (
@@ -55,4 +55,5 @@ EXCEPTION
  WHEN duplicate_object THEN null;
 END $$;
 --> statement-breakpoint
-CREATE UNIQUE INDEX IF NOT EXISTS "github_id_idx" ON "user" USING btree ("github_id");
+CREATE UNIQUE INDEX IF NOT EXISTS "username_unique" ON "user" USING btree ("username");--> statement-breakpoint
+CREATE UNIQUE INDEX IF NOT EXISTS "email_unique" ON "user" USING btree ("email");

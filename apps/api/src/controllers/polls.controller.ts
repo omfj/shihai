@@ -1,9 +1,9 @@
-import { PollService } from "@/services/poll-service";
+import { PollService } from "@/services/poll.service";
 import { type PollInsert } from "@/db/schemas/polls";
 import { auth } from "@/middleware/auth";
 import { CreatePollSchema } from "@/lib/validators";
-import { VoteOptionService } from "@/services/vote-option-service";
-import { VoteService } from "@/services/vote-service";
+import { VoteOptionService } from "@/services/vote-option.service";
+import { VoteService } from "@/services/vote.service";
 import { createApp } from "@/lib/app";
 
 const app = createApp();
@@ -45,6 +45,12 @@ app.get("/poll/:id", async (c) => {
   const id = c.req.param("id");
 
   const poll = await PollService.find(id);
+
+  if (!poll) {
+    return c.json(null, {
+      status: 404,
+    });
+  }
 
   return c.json(poll);
 });

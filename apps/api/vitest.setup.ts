@@ -2,11 +2,11 @@ import { PGlite } from "@electric-sql/pglite";
 import { drizzle } from "drizzle-orm/pglite";
 import { sql } from "drizzle-orm";
 import { afterAll, afterEach, beforeEach, vi } from "vitest";
-import * as schema from "@/db/schemas";
-import { db, client } from "@/db/drizzle";
-import { applyMigrations } from "@/db/migrate";
+import * as schema from "./src/db/schemas";
+import { db, client } from "./src/db/drizzle";
+import { applyMigrations } from "./src/db/migrate";
 
-vi.mock("@/db/drizzle", async () => {
+vi.mock("./src/db/drizzle", async () => {
   const client = new PGlite();
   const db = drizzle(client, { schema });
 

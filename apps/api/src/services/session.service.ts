@@ -2,7 +2,7 @@ import { db } from "@/db/drizzle";
 import { sessions, users, type Session } from "@/db/schemas";
 import type { AnyAppContext } from "@/lib/app";
 import { eq } from "drizzle-orm";
-import { setCookie, deleteCookie } from "hono/cookie";
+import { getCookie, setCookie, deleteCookie } from "hono/cookie";
 
 export const SESSION_COOKIE_NAME = "auth_session";
 
@@ -46,6 +46,10 @@ export class SessionService {
 
   static async delete(id: string) {
     await db.delete(sessions).where(eq(sessions.id, id));
+  }
+
+  static getCookie(c: AnyAppContext) {
+    return getCookie(c, SESSION_COOKIE_NAME);
   }
 
   static setCookie(c: AnyAppContext, session: Session) {

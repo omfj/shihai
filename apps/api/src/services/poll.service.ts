@@ -8,25 +8,27 @@ export class PollService {
   }
 
   static async find(id: string) {
-    return await db.query.polls.findFirst({
-      where: (row, { eq }) => eq(row.id, id),
-      with: {
-        options: {
-          columns: {
-            id: true,
-            caption: true,
-            order: true,
+    return await db.query.polls
+      .findFirst({
+        where: (row, { eq }) => eq(row.id, id),
+        with: {
+          options: {
+            columns: {
+              id: true,
+              caption: true,
+              order: true,
+            },
+          },
+          votes: {
+            columns: {
+              voteOptionId: true,
+              userId: true,
+              createdAt: true,
+            },
           },
         },
-        votes: {
-          columns: {
-            voteOptionId: true,
-            userId: true,
-            createdAt: true,
-          },
-        },
-      },
-    });
+      })
+      .then((row) => row ?? null);
   }
 
   static async create(poll: PollInsert) {
