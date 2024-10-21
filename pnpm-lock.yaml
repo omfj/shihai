@@ -75,6 +75,9 @@ importers:
 
   apps/www:
     dependencies:
+      '@solid-primitives/keyed':
+        specifier: ^1.2.2
+        version: 1.2.2(solid-js@1.9.2)
       '@solidjs/router':
         specifier: 0.14.8
         version: 0.14.8(solid-js@1.9.2)
@@ -87,6 +90,9 @@ importers:
       ky:
         specifier: 1.7.2
         version: 1.7.2
+      solid-icons:
+        specifier: 1.1.0
+        version: 1.1.0(solid-js@1.9.2)
       solid-js:
         specifier: 1.9.2
         version: 1.9.2
@@ -1835,6 +1841,14 @@ packages:
     resolution: {integrity: sha512-+Fj43pSMwJs4KRrH/938Uf+uAELIgVBmQzg/q1YG10djyfA3TnrU8N8XzqCh/okZdszqBQTZf96idMfE5lnwTA==}
     dev: true
 
+  /@solid-primitives/keyed@1.2.2(solid-js@1.9.2):
+    resolution: {integrity: sha512-oBziY40JK4XmJ57XGkFl8j0GtEarSu0hhjdkUQgqL/U0QQE3TZrRo9uhgH7I6VGJKBKG7SAraTPE6S5lVLM1ow==}
+    peerDependencies:
+      solid-js: ^1.6.12
+    dependencies:
+      solid-js: 1.9.2
+    dev: false
+
   /@solidjs/router@0.14.8(solid-js@1.9.2):
     resolution: {integrity: sha512-S+rD5Twp0820cM03wEIYtb7/4KN7Cfr3BP+qPIqb7IXO/SZ72tWqHEMQsmcjDbr4yVfpA+5Sq0Y+xcq09y1gQA==}
     peerDependencies:
@@ -3270,6 +3284,14 @@ packages:
     resolution: {integrity: sha512-bzyZ1e88w9O1iNJbKnOlvYTrWPDl46O1bG0D3XInv+9tkPrxrN8jUUTiFlDkkmKWgn1M6CfIA13SuGqOa9Korw==}
     engines: {node: '>=14'}
     dev: true
+
+  /solid-icons@1.1.0(solid-js@1.9.2):
+    resolution: {integrity: sha512-IesTfr/F1ElVwH2E1110s2RPXH4pujKfSs+koT8rwuTAdleO5s26lNSpqJV7D1+QHooJj18mcOiz2PIKs0ic+A==}
+    peerDependencies:
+      solid-js: '*'
+    dependencies:
+      solid-js: 1.9.2
+    dev: false
 
   /solid-js@1.9.2:
     resolution: {integrity: sha512-fe/K03nV+kMFJYhAOE8AIQHcGxB4rMIEoEyrulbtmf217NffbbwBqJnJI4ovt16e+kaIt0czE2WA7mP/pYN9yg==}

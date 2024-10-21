@@ -3,9 +3,9 @@ import { type RouteSectionProps } from "@solidjs/router";
 
 export function DefaultLayout({ children }: RouteSectionProps) {
   return (
-    <>
+    <div class="min-h-screen flex flex-col">
       <Header />
-      {children}
-    </>
+      <div class="flex-1">{children}</div>
+    </div>
   );
 }

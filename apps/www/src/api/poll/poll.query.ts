@@ -8,10 +8,11 @@ export function createPollsQuery() {
   }));
 }
 
-export function createPollQuery(id: () => string) {
+export function createPollQuery(id: string) {
   return createQuery(() => ({
-    queryKey: ["poll", id()],
-    queryFn: () => fetchPoll(id()),
+    queryKey: ["poll", id],
+    queryFn: () => fetchPoll(id),
+    throwOnError: true,
   }));
 }
 

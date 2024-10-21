@@ -1,5 +1,4 @@
 import { PollService } from "@/services/poll.service";
-import { type PollInsert } from "@/db/schemas/polls";
 import { auth } from "@/middleware/auth";
 import { CreatePollSchema } from "@/lib/validators";
 import { VoteOptionService } from "@/services/vote-option.service";
@@ -15,8 +14,7 @@ app.get("/polls", async (c) => {
 });
 
 app.post("/poll", auth(), async (c) => {
-  const json = await c.req.json<PollInsert>();
-  const { success, data } = CreatePollSchema.safeParse(json);
+  const { success, data } = await c.req.json().then(CreatePollSchema.safeParse);
 
   if (!success) {
     return c.json(
