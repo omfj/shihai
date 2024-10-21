@@ -39,7 +39,7 @@ export function Poll() {
     }));
   };
 
-  const votedOption = () => pollQuery.data?.votes.find((vote) => vote.userId === user?.id);
+  const votedOption = () => pollQuery.data?.votes.find((vote) => vote.userId === user()?.id);
 
   const handleVote = async (optionId: string) => {
     await voteMutation.mutateAsync({ pollId: params.id, optionId });

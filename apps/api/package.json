@@ -12,7 +12,8 @@
     "test:unit": "vitest",
     "db:generate": "drizzle-kit generate",
     "db:migrate": "drizzle-kit migrate",
-    "db:studio": "drizzle-kit studio"
+    "db:studio": "drizzle-kit studio",
+    "clean": "rm -rf .turbo dist node_modules"
   },
   "dependencies": {
     "@hono/node-server": "1.13.2",
