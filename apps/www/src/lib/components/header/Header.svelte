@@ -1,19 +1,15 @@
 <script>
-	import { createQuery } from '@tanstack/svelte-query';
 	import HeaderItem from './HeaderItem.svelte';
-	import { getMe } from '$lib/api/auth/auth.fetch';
+	import { page } from '$app/stores';
+	import LogOutButton from './LogOutButton.svelte';
 
-	const userState = createQuery({
-		queryKey: ['auth'],
-		queryFn: getMe
-	});
-
-	let isLoggedIn = $derived.by(() => !!$userState.data);
+	let user = $page.data.user;
+	let isLoggedIn = $derived.by(() => !!user);
 </script>
 
 <header class="bg-indigo-600 p-3 flex items-center justify-between mb-8">
 	<a href="/">
-		<h1 class="font-bold text-white text-xl">Shihai</h1>
+		<h1 class="font-bold text-white text-xl">⛩️ Shihai</h1>
 	</a>
 
 	<div>
@@ -21,7 +17,7 @@
 			{#if isLoggedIn}
 				<HeaderItem href="/poll/create">Create poll</HeaderItem>
 				<HeaderItem href="/profile">Profile</HeaderItem>
-				<HeaderItem href="/logout">Logout</HeaderItem>
+				<LogOutButton />
 			{/if}
 
 			{#if !isLoggedIn}

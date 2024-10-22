@@ -3,7 +3,7 @@ import type { Bindings, Variables } from "@/lib/app";
 import { SessionService } from "@/services/session.service";
 import type { Session, User } from "@/db/schemas";
 
-export function auth() {
+export const auth = () => {
   return createMiddleware<{
     Bindings: Bindings;
     Variables: Variables & {
@@ -32,4 +32,4 @@ export function auth() {
 
     return await next();
   });
-}
+};

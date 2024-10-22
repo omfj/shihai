@@ -2,6 +2,10 @@
 	let { data } = $props();
 </script>
 
+<svelte:head>
+	<title>{data.poll.question}</title>
+</svelte:head>
+
 <h1 class="text-lg font-medium">{data.poll.question}</h1>
 
 {#each data.poll.options as option}

@@ -1,5 +1,6 @@
 import { createApp } from "@/lib/app";
 import { LoginSchema, RegisterSchema } from "@/lib/validators";
+import { admin } from "@/middleware/admin";
 import { auth } from "@/middleware/auth";
 import { HashService } from "@/services/hash.service";
 import { SessionService } from "@/services/session.service";
@@ -10,11 +11,7 @@ const app = createApp();
 app.get("/auth/me", auth(), (c) => {
   const user = c.var.auth.user;
 
-  return c.json({
-    id: user.id,
-    username: user.username,
-    email: user.email,
-  });
+  return c.json(user);
 });
 
 app.post("/auth/login", async (c) => {
@@ -24,13 +21,13 @@ app.post("/auth/login", async (c) => {
     return c.json({ error: "Invalid login data" }, { status: 400 });
   }
 
-  const user = await UserService.findByUsername(data.username);
+  const user = await UserService.findByUsernameWithPassword(data.username);
 
-  if (!user) {
+  if (!user || !user.password) {
     return c.json({ error: "User not found" }, { status: 404 });
   }
 
-  const isCorrectPassword = await HashService.compare(data.password, user.password);
+  const isCorrectPassword = await HashService.compare(data.password, user.password.hashedPassword);
 
   if (!isCorrectPassword) {
     return c.json({ error: "Invalid password" }, { status: 401 });
@@ -70,6 +67,22 @@ app.post("/auth/register", async (c) => {
 
   return c.json({
     success: true,
+  });
+});
+
+app.post("/auth/session", admin(), async (c) => {
+  const json = await c.req.json<{ sessionId: string }>();
+
+  const { user } = await SessionService.find(json.sessionId);
+
+  if (!user) {
+    return c.json(null, 404);
+  }
+
+  return c.json({
+    id: user.id,
+    username: user.username,
+    email: user.email,
   });
 });
 

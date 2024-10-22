@@ -1,6 +1,6 @@
 <script lang="ts">
-	import { getQueryClientContext } from '@tanstack/svelte-query';
-	import { registerUser } from '$lib/api/auth/auth.fetch';
+	import { goto } from '$app/navigation';
+	import { register } from '$lib/api/auth/auth.fetch';
 	import { createMutation } from '@tanstack/svelte-query';
 	import { type FormEventHandler } from 'svelte/elements';
 
@@ -11,44 +11,44 @@
 
 	let isMatchingPasswords = $derived.by(() => password === passwordRepeat);
 
-	let queryClient = getQueryClientContext();
-
 	const registerMutation = createMutation({
-		mutationFn: registerUser
+		mutationFn: register
 	});
 
-	const handleSubmit: FormEventHandler<HTMLFormElement> = (e) => {
+	const handleSubmit: FormEventHandler<HTMLFormElement> = async (e) => {
 		e.preventDefault();
 
 		if (!isMatchingPasswords) {
 			return;
 		}
 
-		$registerMutation.mutate({
+		await $registerMutation.mutateAsync({
 			username,
 			email,
 			password
 		});
 
-		queryClient.invalidateQueries({
-			queryKey: ['auth']
-		});
+		await goto('/');
 	};
 </script>
 
+<svelte:head>
+	<title>Register</title>
+</svelte:head>
+
 <form onsubmit={handleSubmit} class="flex flex-col gap-4">
-	<label class="flex flex-col">
-		<span>Username</span>
+	<label class="flex flex-col gap-1">
+		<span class="font-medium text-sm">Username</span>
 		<input class="px-2 py-1 h-8 border rounded" type="text" name="username" bind:value={username} />
 	</label>
 
-	<label class="flex flex-col">
-		<span>Email</span>
+	<label class="flex flex-col gap-1">
+		<span class="font-medium text-sm">Email</span>
 		<input class="px-2 py-1 h-8 border rounded" type="email" name="email" bind:value={email} />
 	</label>
 
-	<label class="flex flex-col">
-		<span>Password</span>
+	<label class="flex flex-col gap-1">
+		<span class="font-medium text-sm">Password</span>
 		<input
 			class="px-2 py-1 h-8 border rounded"
 			type="password"
@@ -57,8 +57,8 @@
 		/>
 	</label>
 
-	<label class="flex flex-col">
-		<span>Repeat Password</span>
+	<label class="flex flex-col gap-1">
+		<span class="font-medium text-sm">Repeat password</span>
 		<input
 			class="px-2 py-1 h-8 border rounded"
 			type="password"

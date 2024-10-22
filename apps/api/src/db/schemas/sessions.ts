@@ -1,7 +1,7 @@
 import { pgTable, text, timestamp } from "drizzle-orm/pg-core";
 import { nanoid } from "nanoid";
 import { relations, type InferInsertModel, type InferSelectModel } from "drizzle-orm";
-import { users } from ".";
+import { users } from "./users";
 import { createSelectSchema } from "drizzle-zod";
 
 export const sessions = pgTable("session", {

@@ -1,6 +1,11 @@
+type Option = {
+	id: number;
+	value: string;
+};
+
 export class CreatePollState {
 	#question = $state('');
-	#options = $state(['']);
+	#options = $state([{ id: 0, value: '' }]);
 
 	get question() {
 		return this.#question;
@@ -14,7 +19,7 @@ export class CreatePollState {
 		return this.#options;
 	}
 
-	set options(value: Array<string>) {
+	set options(value: Array<Option>) {
 		this.#options = value;
 	}
 
@@ -23,7 +28,7 @@ export class CreatePollState {
 	}
 
 	addOption() {
-		this.#options = [...this.#options, ''];
+		this.#options = [...this.#options, { id: this.#options.length + 1, value: '' }];
 	}
 
 	moveOption(index: number, direction: 'up' | 'down') {

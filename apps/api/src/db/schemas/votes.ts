@@ -1,7 +1,9 @@
 import { pgTable, primaryKey, text, timestamp } from "drizzle-orm/pg-core";
 import { relations, type InferInsertModel, type InferSelectModel } from "drizzle-orm";
-import { polls, users, voteOptions } from ".";
 import { createInsertSchema, createSelectSchema } from "drizzle-zod";
+import { polls } from "./polls";
+import { voteOptions } from "./vote-options";
+import { users } from "./users";
 
 export const votes = pgTable(
   "vote",

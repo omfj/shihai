@@ -8,6 +8,16 @@ export type CreatePollInput = {
 	options: Array<string>;
 };
 
+export type CreatePollResult =
+	| {
+			success: false;
+			error: string;
+	  }
+	| {
+			success: true;
+			data: SimplePoll;
+	  };
+
 export type Poll = {
 	id: string;
 	question: string;

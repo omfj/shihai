@@ -18,7 +18,7 @@ app.post("/poll", auth(), async (c) => {
 
   if (!success) {
     return c.json(
-      { error: "Invalid poll data" },
+      { success: false, error: "Invalid poll data" },
       {
         status: 400,
       },
@@ -41,7 +41,10 @@ app.post("/poll", auth(), async (c) => {
 
   await VoteOptionService.createMany(voteOptions);
 
-  return c.text("OK");
+  return c.json({
+    success: true,
+    data: poll,
+  });
 });
 
 app.get("/poll/:id", async (c) => {

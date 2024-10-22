@@ -1,11 +1,15 @@
 import { db } from "@/db/drizzle";
-import { users, type User } from "@/db/schemas";
+import { passwords, users, type User } from "@/db/schemas";
 import { HashService } from "./hash.service";
+import { nanoid } from "nanoid";
 
 export class UserService {
-  static async findByUsername(username: string) {
+  static async findByUsernameWithPassword(username: string) {
     return await db.query.users.findFirst({
       where: (row, { eq }) => eq(row.username, username),
+      with: {
+        password: true,
+      },
     });
   }
 
@@ -37,17 +41,32 @@ export class UserService {
       return { success: false, error: "User already exists" };
     }
 
+    const userId = nanoid();
     const hashedPassword = await HashService.hash(password);
 
-    const user = await db
-      .insert(users)
-      .values({
-        email,
-        username,
-        password: hashedPassword,
-      })
-      .returning()
-      .then((rows) => rows[0] ?? null);
+    const user = await db.transaction(async (tx) => {
+      const user = await db
+        .insert(users)
+        .values({
+          id: userId,
+          email,
+          username,
+        })
+        .returning()
+        .then((rows) => rows[0] ?? null);
+
+      if (!user) {
+        tx.rollback();
+        return null;
+      }
+
+      await db.insert(passwords).values({
+        hashedPassword,
+        userId,
+      });
+
+      return user;
+    });
 
     if (!user) {
       return { success: false, error: "Failed to create user" };

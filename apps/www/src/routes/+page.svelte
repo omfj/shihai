@@ -5,13 +5,18 @@
 	let { polls } = data;
 </script>
 
+<svelte:head>
+	<title>Shihai</title>
+</svelte:head>
+
 {#if polls.length > 0}
-	<ul>
+	<ul class="flex flex-col gap-4">
 		{#each polls as poll}
 			<li>
-				<a href="/poll/{poll.id}">
-					<div class="rounded border p-4">
-						<h2 class="font-medium text-lg">{poll.question}</h2>
+				<a class="group" href="/poll/{poll.id}">
+					<div class="relative rounded border p-4">
+						<span class="absolute top-1 right-1 text-[10px] text-gray-500">#{poll.id}</span>
+						<h2 class="font-medium text-lg group-hover:underline">{poll.question}</h2>
 					</div>
 				</a>
 			</li>

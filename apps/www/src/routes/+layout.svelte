@@ -8,8 +8,10 @@
 </script>
 
 <QueryClientProvider client={data.queryClient}>
-	<div class="bg-gray-200">
-		<div class="flex flex-col min-h-screen max-w-screen-sm mx-auto bg-white md:shadow">
+	<div class="bg-gray-200 sm:p-4 flex flex-col min-h-screen">
+		<div
+			class="flex flex-col overflow-hidden sm:rounded-lg flex-1 w-full max-w-screen-sm mx-auto bg-white sm:shadow-lg sm:border-4 border-gray-400"
+		>
 			<Header />
 			<div class="flex-1 px-4">
 				{@render children()}

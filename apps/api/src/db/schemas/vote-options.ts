@@ -2,7 +2,7 @@ import { pgTable, text, integer } from "drizzle-orm/pg-core";
 import { nanoid } from "nanoid";
 import { relations, type InferInsertModel, type InferSelectModel } from "drizzle-orm";
 import { createInsertSchema, createSelectSchema } from "drizzle-zod";
-import { polls } from ".";
+import { polls } from "./polls";
 
 export const voteOptions = pgTable("vote_option", {
   id: text().notNull().primaryKey().$defaultFn(nanoid),

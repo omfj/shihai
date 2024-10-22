@@ -1,8 +1,11 @@
 import { pgTable, text, uniqueIndex } from "drizzle-orm/pg-core";
 import { nanoid } from "nanoid";
 import { relations, type InferInsertModel, type InferSelectModel } from "drizzle-orm";
-import { sessions, votes, polls } from ".";
 import { createInsertSchema, createSelectSchema } from "drizzle-zod";
+import { sessions } from "./sessions";
+import { passwords } from "./passwords";
+import { votes } from "./votes";
+import { polls } from "./polls";
 
 export const users = pgTable(
   "user",
@@ -10,7 +13,6 @@ export const users = pgTable(
     id: text().notNull().primaryKey().$defaultFn(nanoid),
     username: text().notNull(),
     email: text().notNull(),
-    password: text().notNull(),
   },
   (table) => ({
     usernameUnique: uniqueIndex("username_unique").on(table.username),
@@ -18,15 +20,15 @@ export const users = pgTable(
   }),
 );
 
-export const usersRelations = relations(users, ({ many }) => ({
+export const usersRelations = relations(users, ({ one, many }) => ({
   sessions: many(sessions),
   polls: many(polls),
   votes: many(votes),
+  password: one(passwords),
 }));
 
 export type User = InferSelectModel<typeof users>;
 export type UserInsert = InferInsertModel<typeof users>;
-export type UserWithoutPassword = Omit<User, "password">;
 
 export const UserSchema = createSelectSchema(users);
 export const UserInsertSchema = createInsertSchema(users);
