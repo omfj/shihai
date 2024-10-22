@@ -4,7 +4,19 @@ import { polls, type PollInsert } from "@/db/schemas/polls";
 
 export class PollService {
   static async findAll() {
-    return await db.query.polls.findMany();
+    return await db.query.polls
+      .findMany({
+        with: {
+          votes: true,
+        },
+      })
+      .then((rows) =>
+        rows.map((row) => ({
+          id: row.id,
+          question: row.question,
+          votes: row.votes.length,
+        })),
+      );
   }
 
   static async find(id: string) {

@@ -1,6 +1,7 @@
 export type SimplePoll = {
 	id: string;
 	question: string;
+	votes: number;
 };
 
 export type CreatePollInput = {
@@ -31,4 +32,9 @@ export type Poll = {
 		voteOptionId: string;
 		createdAt: string;
 	}>;
+};
+
+export type VotePollInput = {
+	pollId: string;
+	voteOptionId: string;
 };

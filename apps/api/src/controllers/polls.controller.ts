@@ -43,7 +43,10 @@ app.post("/poll", auth(), async (c) => {
 
   return c.json({
     success: true,
-    data: poll,
+    data: {
+      ...poll,
+      votes: 0,
+    },
   });
 });
 
