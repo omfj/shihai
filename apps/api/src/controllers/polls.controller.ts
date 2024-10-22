@@ -29,7 +29,12 @@ app.post("/poll", auth(), async (c) => {
     question: data.question,
   });
 
-  const voteOptions = data.options.map((option) => ({
+  const optionsWithOrder = data.options.map((option, index) => ({
+    caption: option,
+    order: index,
+  }));
+
+  const voteOptions = optionsWithOrder.map((option) => ({
     ...option,
     pollId: poll.id,
   }));

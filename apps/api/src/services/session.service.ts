@@ -24,14 +24,21 @@ export class SessionService {
   }
 
   static async find(id: string) {
-    const { user, session } = await db
+    const res = await db
       .select()
       .from(sessions)
       .where(eq(sessions.id, id))
       .leftJoin(users, eq(sessions.userId, users.id))
       .then((rows) => rows[0]);
 
-    if (!session || !user) {
+    if (!res) {
+      return {
+        session: null,
+        user: null,
+      };
+    }
+
+    if (!res.session || !res.user) {
       return {
         session: null,
         user: null,
@@ -39,8 +46,8 @@ export class SessionService {
     }
 
     return {
-      session,
-      user,
+      session: res.session,
+      user: res.user,
     };
   }
 
