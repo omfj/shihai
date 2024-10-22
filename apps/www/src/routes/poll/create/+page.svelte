@@ -6,7 +6,7 @@
 	import { createMutation } from '@tanstack/svelte-query';
 	import { ArrowUp, ArrowDown, X } from 'lucide-svelte';
 	import { flip } from 'svelte/animate';
-	import { type FormEventHandler } from 'svelte/elements';
+	import type { FormEventHandler } from 'svelte/elements';
 
 	let pollState = new CreatePollState();
 

@@ -14,8 +14,7 @@
 		{#each polls as poll}
 			<li>
 				<a class="group" href="/poll/{poll.id}">
-					<div class="relative rounded border p-4">
-						<span class="absolute top-1 right-1 text-[10px] text-gray-500">#{poll.id}</span>
+					<div class="rounded border p-4">
 						<h2 class="font-medium text-lg group-hover:underline">{poll.question}</h2>
 					</div>
 				</a>

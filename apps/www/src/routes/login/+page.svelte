@@ -1,8 +1,13 @@
 <script lang="ts">
-	import { goto } from '$app/navigation';
+	import { goto, invalidateAll } from '$app/navigation';
 	import { login } from '$lib/api/auth/auth.fetch';
+	import Form from '$lib/components/form/Form.svelte';
+	import FormControlLabel from '$lib/components/form/FormControl/FormControlLabel.svelte';
+	import FormControlRoot from '$lib/components/form/FormControl/FormControlRoot.svelte';
+	import Button from '$lib/components/ui/Button.svelte';
+	import Input from '$lib/components/ui/Input.svelte';
 	import { createMutation } from '@tanstack/svelte-query';
-	import { type FormEventHandler } from 'svelte/elements';
+	import type { FormEventHandler } from 'svelte/elements';
 
 	let username = $state('');
 	let password = $state('');
@@ -19,6 +24,7 @@
 			password
 		});
 
+		await invalidateAll();
 		await goto('/');
 	};
 </script>
@@ -27,21 +33,20 @@
 	<title>Login</title>
 </svelte:head>
 
-<form onsubmit={handleSubmit} class="flex flex-col gap-4">
-	<label class="flex flex-col gap-1">
-		<span class="font-medium text-sm">Username</span>
-		<input class="px-2 py-1 h-8 border rounded" type="text" name="username" bind:value={username} />
-	</label>
+<Form onsubmit={handleSubmit}>
+	<FormControlRoot>
+		<FormControlLabel>Username</FormControlLabel>
+		<Input type="text" name="username" bind:value={username} />
+	</FormControlRoot>
 
-	<label class="flex flex-col gap-1">
-		<span class="font-medium text-sm">Password</span>
-		<input
-			class="px-2 py-1 h-8 border rounded"
-			type="password"
-			name="password"
-			bind:value={password}
-		/>
-	</label>
+	<FormControlRoot>
+		<FormControlLabel>Password</FormControlLabel>
+		<Input type="password" name="password" bind:value={password} />
+	</FormControlRoot>
 
-	<button class="bg-indigo-600 text-white rounded h-8 font-medium" type="submit">Login</button>
-</form>
+	<Button type="submit">Login</Button>
+</Form>
+
+<p class="py-4 text-center">
+	<a class="text-blue-500 hover:underline" href="/register">Don't have an account?</a>
+</p>
