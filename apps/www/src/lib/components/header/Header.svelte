@@ -1,10 +1,10 @@
 <script>
-	import { page } from '$app/stores';
+	import { getAuthContext } from '$lib/context/auth-context.svelte';
 	import HeaderItem from './HeaderItem.svelte';
 	import LogOutButton from './LogOutButton.svelte';
 
-	let user = $derived($page.data.user);
-	let isLoggedIn = $derived(!!user);
+	let auth = getAuthContext();
+	let isLoggedIn = $derived(!!auth.user);
 </script>
 
 <header class="bg-indigo-600 p-3 flex items-center justify-between mb-8">

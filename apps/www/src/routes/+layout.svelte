@@ -3,8 +3,15 @@
 	import Footer from '$lib/components/footer/Footer.svelte';
 	import Header from '$lib/components/header/Header.svelte';
 	import { QueryClientProvider } from '@tanstack/svelte-query';
+	import { setAuthContext } from '$lib/context/auth-context.svelte';
 
 	let { data, children } = $props();
+
+	setAuthContext({
+		get user() {
+			return data.user;
+		}
+	});
 </script>
 
 <QueryClientProvider client={data.queryClient}>

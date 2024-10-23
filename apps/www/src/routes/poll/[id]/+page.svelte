@@ -1,17 +1,17 @@
 <script lang="ts">
 	import { invalidate } from '$app/navigation';
-	import { page } from '$app/stores';
 	import { votePoll } from '$lib/api/polls/polls.fetch.js';
 	import { cn } from '$lib/cn.js';
 	import Alert from '$lib/components/Alert.svelte';
+	import { getAuthContext } from '$lib/context/auth-context.svelte.js';
 	import { ThumbsUp } from 'lucide-svelte';
 
 	let { data } = $props();
 
-	let user = $derived($page.data.user);
-	let isLoggedIn = $derived(!!user);
+	let auth = getAuthContext();
+	let isLoggedIn = $derived(!!auth.user);
 	let votedOption = $derived(
-		data.poll.votes.find((vote) => vote.userId === user?.id)?.voteOptionId
+		data.poll.votes.find((vote) => vote.userId === auth.user?.id)?.voteOptionId
 	);
 
 	const handleVote = async (voteOptionId: string) => {
@@ -20,7 +20,7 @@
 			voteOptionId
 		});
 
-		invalidate(`poll:${data.poll.id}`);
+		await invalidate(`poll:${data.poll.id}`);
 	};
 
 	const countVotes = (voteOptionId: string) => {
