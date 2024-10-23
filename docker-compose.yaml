@@ -3,12 +3,18 @@ services:
     build:
       context: .
       dockerfile: apps/www/Dockerfile
+      args:
+        - API_KEY=${API_KEY:-foobar}
     ports:
       - 3000:3000
     depends_on:
       - api
+      - db
+      - kv
     environment:
-      VITE_API_URL: http://api:8000
+      - NODE_ENV=production
+      - VITE_API_URL=http://api:8000
+      - API_KEY=${API_KEY:-foobar}
     networks:
       - backend
     restart: always
@@ -27,11 +33,14 @@ services:
     build:
       context: .
       dockerfile: apps/api/Dockerfile
+      args:
+        - API_KEY=${API_KEY:-foobar}
     ports:
       - 8000:8000
     environment:
-      REDIS_HOST: kv
-      DATABASE_URL: postgres://postgres:postgres@db:5432/shihai
+      - REDIS_HOST=kv
+      - DATABASE_URL=postgres://postgres:postgres@db:5432/shihai
+      - API_KEY=${API_KEY:-foobar}
     networks:
       - backend
     restart: always
@@ -54,7 +63,7 @@ services:
     ports:
       - 6379:6379
     environment:
-      REDIS_PASSWORD: redis
+      - REDIS_PASSWORD=redis
     volumes:
       - redis_data:/data
     networks:
@@ -71,9 +80,9 @@ services:
     ports:
       - 5432:5432
     environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
-      POSTGRES_DB: shihai
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=shihai
     networks:
       - backend
     restart: always
@@ -87,10 +96,4 @@ services:
 
 volumes:
   redis_data:
-    driver: local
   postgres_data:
-    driver: local
-
-networks:
-  backend:
-    driver: bridge
