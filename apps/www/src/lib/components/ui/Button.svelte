@@ -9,7 +9,7 @@
 
 <button
 	class={cn(
-		'bg-indigo-600 text-white text-sm hover:bg-indigo-500 transition-all rounded h-8 font-medium',
+		'bg-indigo-600 text-white px-2 text-sm hover:bg-indigo-500 transition-all rounded h-8 font-medium',
 		className
 	)}
 	{...props}
