@@ -1,6 +1,6 @@
 <script>
-	import HeaderItem from './HeaderItem.svelte';
 	import { page } from '$app/stores';
+	import HeaderItem from './HeaderItem.svelte';
 	import LogOutButton from './LogOutButton.svelte';
 
 	let user = $derived($page.data.user);

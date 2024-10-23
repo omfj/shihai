@@ -1,9 +1,18 @@
 <script lang="ts">
 	import { invalidate } from '$app/navigation';
+	import { page } from '$app/stores';
 	import { votePoll } from '$lib/api/polls/polls.fetch.js';
+	import { cn } from '$lib/cn.js';
+	import Alert from '$lib/components/Alert.svelte';
 	import { ThumbsUp } from 'lucide-svelte';
 
 	let { data } = $props();
+
+	let user = $derived($page.data.user);
+	let isLoggedIn = $derived(!!user);
+	let votedOption = $derived(
+		data.poll.votes.find((vote) => vote.userId === user?.id)?.voteOptionId
+	);
 
 	const handleVote = async (voteOptionId: string) => {
 		await votePoll({
@@ -23,10 +32,17 @@
 	<title>{data.poll.question}</title>
 </svelte:head>
 
+{#if !isLoggedIn}
+	<Alert class="mb-4">
+		<p>You need to be logged in to vote.</p>
+	</Alert>
+{/if}
+
 <h1 class="text-2xl font-medium mb-4">{data.poll.question}</h1>
 
 <ul class="flex flex-col gap-2">
 	{#each data.poll.options as option}
+		{@const hasVotedOnOption = votedOption === option.id}
 		<li>
 			<div class="border rounded h-16 px-4 py-2 flex items-center gap-2">
 				<p class="font-medium text-xl flex-1">{option.caption}</p>
@@ -38,7 +54,12 @@
 
 				<button
 					onclick={() => handleVote(option.id)}
-					class="flex items-center justify-center border text-gray-600 h-10 w-10 rounded transition-colors duration-300 ease-in-out hover:bg-indigo-100 hover:border-2 hover:text-indigo-600 hover:border-indigo-400"
+					class={cn(
+						'flex items-center justify-center border text-gray-600 h-10 w-10 rounded transition-colors duration-300 ease-in-out hover:bg-indigo-100 hover:border-2 hover:text-indigo-600 hover:border-indigo-400',
+						{
+							'bg-indigo-100 border-indigo-400 text-indigo-600': hasVotedOnOption
+						}
+					)}
 				>
 					<ThumbsUp class="h-6 w-6" />
 				</button>

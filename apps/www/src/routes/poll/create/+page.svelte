@@ -9,6 +9,7 @@
 	import type { FormEventHandler } from 'svelte/elements';
 
 	let pollState = new CreatePollState();
+	let error = $state('');
 
 	const pollMutation = createMutation({
 		mutationFn: createPoll
@@ -28,6 +29,8 @@
 
 		if (result.success) {
 			goto(`/poll/${result.data.id}`);
+		} else {
+			error = result.error;
 		}
 	};
 
@@ -47,6 +50,10 @@
 		<title>Creating - {pollState.question}...</title>
 	{/if}
 </svelte:head>
+
+{#if error}
+	<p class="text-center text-red-500">{error}</p>
+{/if}
 
 <form onsubmit={handleSubmit} class="flex flex-col gap-4">
 	<label class="flex flex-col gap-1">

@@ -15,8 +15,6 @@ services:
       - NODE_ENV=production
       - VITE_API_URL=http://api:8000
       - API_KEY=${API_KEY:-foobar}
-    networks:
-      - backend
     restart: always
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:3000"]
@@ -41,8 +39,6 @@ services:
       - REDIS_HOST=kv
       - DATABASE_URL=postgres://postgres:postgres@db:5432/shihai
       - API_KEY=${API_KEY:-foobar}
-    networks:
-      - backend
     restart: always
     depends_on:
       - kv
@@ -66,8 +62,6 @@ services:
       - REDIS_PASSWORD=redis
     volumes:
       - redis_data:/data
-    networks:
-      - backend
     restart: always
     healthcheck:
       test: ["CMD", "redis-cli", "ping"]
@@ -83,8 +77,6 @@ services:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
       - POSTGRES_DB=shihai
-    networks:
-      - backend
     restart: always
     volumes:
       - postgres_data:/var/lib/postgresql/data

@@ -12,7 +12,7 @@
 
 <button
 	type="button"
-	class="flex items-center justify-center size-8 p-2 border rounded text-gray-600 hover:bg-gray-200 hover:border-gray-300 disabled:cursor-not-allowed disabled:opacity-50"
+	class="flex items-center justify-center size-8 p-2 border rounded text-gray-600 hover:bg-gray-200 hover:border-gray-300 disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:bg-transparent disabled:hover:border-gray-200"
 	{onclick}
 	{disabled}
 >
