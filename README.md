@@ -34,7 +34,7 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit.
    pnpm dev
    ```
 
-5. Access the application at [http://localhost:3000](http://localhost:3000)
+5. Access the application at [http://localhost:5173](http://localhost:5173)
 
 ### Production environment
 
@@ -52,7 +52,7 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit.
 
 ### Frontend
 
-Uses a single page application (SPA) with Solid.js as the UI-framework. Vite as the build tool. Tailwindcss for the styling.
+Uses Svelte and SvelteKit for the frontend. Vite as the build tool. Tailwindcss for the styling.
 
 ### Backend
 
