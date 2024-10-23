@@ -15,6 +15,7 @@ export class PollService {
           id: row.id,
           question: row.question,
           votes: row.votes.length,
+          createdAt: row.createdAt,
         })),
       );
   }

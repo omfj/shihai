@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { format } from '$lib/date';
 	import { OctagonAlert, ArrowRight } from 'lucide-svelte';
 
 	let { data } = $props();
@@ -20,7 +21,10 @@
 						<ArrowRight
 							class="transition-all pr-2 w-0 group-hover:w-6 duration-300 ease-in-out transform -translate-x-8 opacity-0 group-hover:translate-x-0 group-hover:opacity-100 h-6 text-indigo-600"
 						/>
-						<h2 class="font-medium text-lg flex-1">{poll.question}</h2>
+						<div class="flex-1">
+							<h2 class="font-medium text-lg">{poll.question}</h2>
+							<p class="text-sm text-gray-500">{format(poll.createdAt)}</p>
+						</div>
 
 						<div class="w-10 flex flex-col items-center justify-center">
 							<p class="text-sm text-gray-500">Votes</p>

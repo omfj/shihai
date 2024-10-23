@@ -16,6 +16,7 @@
 		<menu class="flex items-center">
 			{#if isLoggedIn}
 				<HeaderItem href="/poll/create">Create poll</HeaderItem>
+				<HeaderItem href="/profile">Profile</HeaderItem>
 				<LogOutButton />
 			{/if}
 

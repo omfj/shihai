@@ -2,6 +2,7 @@ export type SimplePoll = {
 	id: string;
 	question: string;
 	votes: number;
+	createdAt: string;
 };
 
 export type CreatePollInput = {
@@ -22,6 +23,7 @@ export type CreatePollResult =
 export type Poll = {
 	id: string;
 	question: string;
+	createdAt: string;
 	options: Array<{
 		id: string;
 		caption: string;

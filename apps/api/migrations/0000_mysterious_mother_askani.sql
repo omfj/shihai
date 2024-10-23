@@ -1,6 +1,12 @@
+CREATE TABLE IF NOT EXISTS "password" (
+	"user_id" text PRIMARY KEY NOT NULL,
+	"hashed_password" text NOT NULL
+);
+--> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "poll" (
 	"id" text PRIMARY KEY NOT NULL,
-	"question" text NOT NULL
+	"question" text NOT NULL,
+	"created_at" timestamp DEFAULT now() NOT NULL
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "session" (
@@ -12,8 +18,7 @@ CREATE TABLE IF NOT EXISTS "session" (
 CREATE TABLE IF NOT EXISTS "user" (
 	"id" text PRIMARY KEY NOT NULL,
 	"username" text NOT NULL,
-	"email" text NOT NULL,
-	"password" text NOT NULL
+	"email" text NOT NULL
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "vote_option" (
