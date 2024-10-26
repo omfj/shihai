@@ -4,6 +4,7 @@ import { CreatePollSchema } from "@/lib/validators";
 import { VoteOptionService } from "@/services/vote-option.service";
 import { VoteService } from "@/services/vote.service";
 import { createApp } from "@/lib/app";
+import { isPast } from "date-fns";
 
 const app = createApp();
 
@@ -27,6 +28,7 @@ app.post("/poll", auth(), async (c) => {
 
   const poll = await PollService.create({
     question: data.question,
+    expiresAt: data.expiresAt,
   });
 
   const optionsWithOrder = data.options.map((option, index) => ({
@@ -76,6 +78,15 @@ app.post("/poll/:pollId/vote/:optionId", auth(), async (c) => {
       { error: "Poll not found" },
       {
         status: 404,
+      },
+    );
+  }
+
+  if (poll.expiresAt && isPast(poll.expiresAt)) {
+    return c.json(
+      { error: "Poll has expired" },
+      {
+        status: 400,
       },
     );
   }

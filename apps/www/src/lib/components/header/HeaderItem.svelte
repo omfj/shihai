@@ -10,7 +10,7 @@
 </script>
 
 <li>
-	<a class="font-medium text-white px-2" {href}>
+	<a class="font-medium text-gray-600 hover:text-gray-900 transition-all px-2" {href}>
 		{@render children()}
 	</a>
 </li>

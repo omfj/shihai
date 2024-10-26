@@ -1,20 +1,19 @@
 <script lang="ts">
-	import type { Snippet } from 'svelte';
+	import { cn } from '$lib/cn';
+	import type { HTMLButtonAttributes } from 'svelte/elements';
 
-	type Props = {
-		onclick: () => void;
-		children: Snippet;
-		disabled: boolean;
-	};
+	type Props = HTMLButtonAttributes;
 
-	let { onclick, children, disabled }: Props = $props();
+	let { class: className, children, ...props }: Props = $props();
 </script>
 
 <button
 	type="button"
-	class="flex items-center justify-center size-8 p-2 border rounded text-gray-600 hover:bg-gray-200 hover:border-gray-300 disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:bg-transparent disabled:hover:border-gray-200"
-	{onclick}
-	{disabled}
+	class={cn(
+		'flex items-center justify-center size-8 p-2 border rounded text-gray-600 transition-all hover:bg-gray-200 hover:border-gray-300 disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:bg-transparent disabled:hover:border-gray-200',
+		className
+	)}
+	{...props}
 >
 	{@render children()}
 </button>

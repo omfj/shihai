@@ -1,10 +1,11 @@
 <script lang="ts">
 	import { invalidate } from '$app/navigation';
-	import { votePoll } from '$lib/api/polls/polls.fetch.js';
+	import { votePoll } from '$lib/api/polls/polls.fetch';
 	import { cn } from '$lib/cn.js';
 	import Alert from '$lib/components/Alert.svelte';
-	import { getAuthContext } from '$lib/context/auth-context.svelte.js';
+	import { getAuthContext } from '$lib/context/auth-context.svelte';
 	import { ThumbsUp } from 'lucide-svelte';
+	import { formatWithTime } from '$lib/date';
 
 	let { data } = $props();
 
@@ -12,6 +13,9 @@
 	let isLoggedIn = $derived(!!auth.user);
 	let votedOption = $derived(
 		data.poll.votes.find((vote) => vote.userId === auth.user?.id)?.voteOptionId
+	);
+	let hasExpired = $derived(
+		data.poll.expiresAt ? new Date(data.poll.expiresAt) < new Date() : false
 	);
 
 	const handleVote = async (voteOptionId: string) => {
@@ -38,13 +42,19 @@
 	</Alert>
 {/if}
 
+{#if hasExpired}
+	<Alert class="mb-4">
+		<p>This poll has expired.</p>
+	</Alert>
+{/if}
+
 <h1 class="text-2xl font-medium mb-4">{data.poll.question}</h1>
 
-<ul class="flex flex-col gap-2">
+<ul class="flex flex-col gap-2 mb-4">
 	{#each data.poll.options as option}
 		{@const hasVotedOnOption = votedOption === option.id}
 		<li>
-			<div class="border rounded h-16 px-4 py-2 flex items-center gap-2">
+			<div class="border rounded bg-gray-100 h-16 px-4 py-2 flex items-center gap-2">
 				<p class="font-medium text-xl flex-1">{option.caption}</p>
 
 				<div class="flex flex-col items-center justify-center h-10 w-10 -space-y-1">
@@ -55,11 +65,12 @@
 				<button
 					onclick={() => handleVote(option.id)}
 					class={cn(
-						'flex items-center justify-center border text-gray-600 h-10 w-10 rounded transition-colors duration-300 ease-in-out hover:bg-indigo-100 hover:border-2 hover:text-indigo-600 hover:border-indigo-400',
+						'flex items-center justify-center border text-gray-600 h-10 w-10 rounded transition-all duration-300 ease-in-out bg-white hover:bg-indigo-100 hover:border-2 hover:text-indigo-600 hover:border-indigo-400 disabled:opacity-50 disabled:cursor-not-allowed',
 						{
 							'bg-indigo-100 border-indigo-400 text-indigo-600': hasVotedOnOption
 						}
 					)}
+					disabled={!isLoggedIn || hasExpired}
 				>
 					<ThumbsUp class="h-6 w-6" />
 				</button>
@@ -67,3 +78,8 @@
 		</li>
 	{/each}
 </ul>
+
+<div class="flex flex-col text-sm text-gray-600">
+	<p>Created at: {formatWithTime(data.poll.createdAt)}</p>
+	<p>Expires at: {data.poll.expiresAt ? formatWithTime(data.poll.expiresAt) : 'Never'}</p>
+</div>

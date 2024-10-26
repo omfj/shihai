@@ -5,6 +5,7 @@ type Option = {
 
 export class CreatePollState {
 	#question = $state('');
+	#expiresAt = $state<string | null>(null);
 	#options = $state([{ id: 0, value: '' }]);
 
 	get question() {
@@ -13,6 +14,14 @@ export class CreatePollState {
 
 	set question(value: string) {
 		this.#question = value;
+	}
+
+	get expiresAt() {
+		return this.#expiresAt;
+	}
+
+	set expiresAt(value: string | null) {
+		this.#expiresAt = value;
 	}
 
 	get options() {

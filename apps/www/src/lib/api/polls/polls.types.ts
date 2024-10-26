@@ -3,10 +3,12 @@ export type SimplePoll = {
 	question: string;
 	votes: number;
 	createdAt: string;
+	expiresAt: string | null;
 };
 
 export type CreatePollInput = {
 	question: string;
+	expiresAt: string | null;
 	options: Array<string>;
 };
 
@@ -20,20 +22,25 @@ export type CreatePollResult =
 			data: SimplePoll;
 	  };
 
+export type VoteOption = {
+	id: string;
+	caption: string;
+	order: number;
+};
+
+export type Vote = {
+	userId: string;
+	voteOptionId: string;
+	createdAt: string;
+};
+
 export type Poll = {
 	id: string;
 	question: string;
+	expiresAt: string | null;
 	createdAt: string;
-	options: Array<{
-		id: string;
-		caption: string;
-		order: number;
-	}>;
-	votes: Array<{
-		userId: string;
-		voteOptionId: string;
-		createdAt: string;
-	}>;
+	options: Array<VoteOption>;
+	votes: Array<Vote>;
 };
 
 export type VotePollInput = {

@@ -3,6 +3,7 @@ import { VoteOptionInsertSchema } from "../db/schemas";
 
 export const CreatePollSchema = z.object({
   question: z.string().min(2),
+  expiresAt: z.coerce.date().nullable(),
   options: z.string().array().min(2),
 });
 

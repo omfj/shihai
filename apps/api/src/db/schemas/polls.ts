@@ -8,6 +8,7 @@ import { votes } from "./votes";
 export const polls = pgTable("poll", {
   id: text().notNull().primaryKey().$defaultFn(nanoid),
   question: text().notNull(),
+  expiresAt: timestamp("expires_at"),
   createdAt: timestamp("created_at").notNull().defaultNow(),
 });
 

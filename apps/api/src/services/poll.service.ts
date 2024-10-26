@@ -6,6 +6,8 @@ export class PollService {
   static async findAll() {
     return await db.query.polls
       .findMany({
+        where: (row, { gt, or, isNull }) =>
+          or(gt(row.expiresAt, new Date()), isNull(row.expiresAt)),
         with: {
           votes: true,
         },
@@ -14,8 +16,9 @@ export class PollService {
         rows.map((row) => ({
           id: row.id,
           question: row.question,
-          votes: row.votes.length,
           createdAt: row.createdAt,
+          expiresAt: row.expiresAt,
+          votes: row.votes.length,
         })),
       );
   }

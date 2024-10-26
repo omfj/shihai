@@ -2,6 +2,11 @@
 	import { goto } from '$app/navigation';
 	import { createPoll } from '$lib/api/polls/polls.fetch';
 	import ActionButton from '$lib/components/ActionButton.svelte';
+	import Form from '$lib/components/form/Form.svelte';
+	import FormControlLabel from '$lib/components/form/FormControl/FormControlLabel.svelte';
+	import FormControlRoot from '$lib/components/form/FormControl/FormControlRoot.svelte';
+	import Button from '$lib/components/ui/Button.svelte';
+	import Input from '$lib/components/ui/Input.svelte';
 	import { CreatePollState } from '$lib/states/create-poll-state.svelte';
 	import { createMutation } from '@tanstack/svelte-query';
 	import { ArrowUp, ArrowDown, X } from 'lucide-svelte';
@@ -24,6 +29,7 @@
 
 		const result = await $pollMutation.mutateAsync({
 			question: pollState.question,
+			expiresAt: pollState.expiresAt ? new Date(pollState.expiresAt).toUTCString() : null,
 			options: optionsWithoutEmpty
 		});
 
@@ -41,6 +47,8 @@
 			pollState.addOption();
 		}
 	});
+
+	$inspect(typeof pollState.expiresAt);
 </script>
 
 <svelte:head>
@@ -55,16 +63,31 @@
 	<p class="text-center text-red-500">{error}</p>
 {/if}
 
-<form onsubmit={handleSubmit} class="flex flex-col gap-4">
-	<label class="flex flex-col gap-1">
-		<span class="font-medium text-sm">Question</span>
-		<input
-			class="px-2 py-1 h-8 border rounded"
-			type="text"
-			name="username"
-			bind:value={pollState.question}
-		/>
-	</label>
+<Form onsubmit={handleSubmit}>
+	<FormControlRoot>
+		<FormControlLabel>Question</FormControlLabel>
+		<Input type="text" name="username" bind:value={pollState.question} />
+	</FormControlRoot>
+
+	<FormControlRoot>
+		<FormControlLabel>Expires at</FormControlLabel>
+		<div class="flex items-center gap-2">
+			<Input
+				class="flex-1"
+				type="datetime-local"
+				name="expiresAt"
+				bind:value={pollState.expiresAt}
+			/>
+			<ActionButton
+				title="Reset expiration date"
+				class="hover:text-red-600"
+				onclick={() => (pollState.expiresAt = null)}
+			>
+				<X />
+			</ActionButton>
+		</div>
+		<span class="text-gray-500 text-sm">Optional field if you want the form to expire.</span>
+	</FormControlRoot>
 
 	<ul class="flex flex-col gap-1">
 		{#each pollState.options as option, i (option.id)}
@@ -72,31 +95,41 @@
 			{@const isLast = i === pollState.options.length - 1 || i === pollState.options.length - 2}
 			{@const isOnlyOption = pollState.options.length === 1}
 			<li animate:flip>
-				<label class="flex flex-col gap-1">
-					<span class="text-sm font-medium">Option {i + 1}</span>
+				<FormControlRoot>
+					<FormControlLabel>Option {i + 1}</FormControlLabel>
 					<div class="flex items-center gap-2">
-						<input
-							class="px-2 py-1 h-8 border rounded flex-1"
+						<Input
+							class="flex-1"
 							type="text"
-							name="username"
+							name={`option-${i}`}
 							bind:value={pollState.options[i].value}
 						/>
-						<ActionButton onclick={() => pollState.moveOption(i, 'up')} disabled={isFirst}>
+						<ActionButton
+							title="Move up"
+							onclick={() => pollState.moveOption(i, 'up')}
+							disabled={isFirst}
+						>
 							<ArrowUp />
 						</ActionButton>
-						<ActionButton onclick={() => pollState.moveOption(i, 'down')} disabled={isLast}>
+						<ActionButton
+							title="Move down"
+							onclick={() => pollState.moveOption(i, 'down')}
+							disabled={isLast}
+						>
 							<ArrowDown />
 						</ActionButton>
-						<ActionButton onclick={() => pollState.deleteOption(i)} disabled={isOnlyOption}>
+						<ActionButton
+							title="Delete option"
+							onclick={() => pollState.deleteOption(i)}
+							disabled={isOnlyOption}
+						>
 							<X />
 						</ActionButton>
 					</div>
-				</label>
+				</FormControlRoot>
 			</li>
 		{/each}
 	</ul>
 
-	<button class="bg-indigo-600 text-white text-sm rounded h-8 font-medium" type="submit"
-		>Create poll</button
-	>
-</form>
+	<Button type="submit">Create poll</Button>
+</Form>

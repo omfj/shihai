@@ -7,9 +7,9 @@
 	let isLoggedIn = $derived(!!auth.user);
 </script>
 
-<header class="bg-indigo-600 p-3 flex items-center justify-between mb-8">
+<header class="bg-gray-100 p-3 flex items-center justify-between border-b shadow-sm mb-8">
 	<a href="/">
-		<h1 class="font-bold text-white text-xl">⛩️ Shihai</h1>
+		<h1 class="font-bold text-xl">⛩️ Shihai</h1>
 	</a>
 
 	<div>
