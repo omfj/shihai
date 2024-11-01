@@ -1,0 +1,58 @@
+table password {
+  user_id text [pk, not null]
+  hashed_password text [not null]
+}
+
+table poll {
+  id text [pk, not null]
+  question text [not null]
+  expires_at timestamp
+  created_at timestamp [not null, default: `now()`]
+}
+
+table session {
+  id text [pk, not null]
+  user_id text [not null]
+  expires_at timestamp [not null]
+}
+
+table user {
+  id text [pk, not null]
+  username text [not null]
+  email text [not null]
+
+  indexes {
+    username [name: 'username_unique', unique]
+    email [name: 'email_unique', unique]
+  }
+}
+
+table vote_option {
+  id text [pk, not null]
+  caption text [not null]
+  order integer [not null]
+  poll_id text [not null]
+}
+
+table vote {
+  user_id text [not null]
+  poll_id text [not null]
+  vote_option_id text [not null]
+  created_at timestamp [not null]
+
+  indexes {
+    (user_id, poll_id) [pk]
+  }
+}
+
+ref: password.user_id - user.id
+
+ref: session.user_id > user.id
+
+ref: vote_option.poll_id > poll.id
+
+ref: vote.user_id > user.id
+
+ref: vote.poll_id > poll.id
+
+ref: vote.vote_option_id - vote_option.id
