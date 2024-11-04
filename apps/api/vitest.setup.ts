@@ -6,7 +6,7 @@ import * as schema from "./src/db/schemas";
 import { db, client } from "./src/db/drizzle";
 import { applyMigrations } from "./src/db/migrate";
 
-vi.mock("./src/db/drizzle", async () => {
+vi.mock("./src/db/drizzle", () => {
   const client = new PGlite();
   const db = drizzle(client, { schema });
 
