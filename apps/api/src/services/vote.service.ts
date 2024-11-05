@@ -1,6 +1,6 @@
 import { and, eq } from "drizzle-orm";
-import { db } from "@/db/drizzle";
-import { votes, type VoteInsert } from "@/db/schemas";
+import { db } from "@/storage/db/drizzle";
+import { votes, type VoteInsert } from "@/storage/db/schemas";
 
 type VotePrimaryKey = {
   pollId: string;

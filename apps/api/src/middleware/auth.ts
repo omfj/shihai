@@ -1,7 +1,7 @@
 import { createMiddleware } from "hono/factory";
 import type { Bindings, Variables } from "@/lib/app";
 import { SessionService } from "@/services/session.service";
-import type { Session, User } from "@/db/schemas";
+import type { Session, User } from "@/storage/db/schemas";
 
 export const auth = () => {
   return createMiddleware<{

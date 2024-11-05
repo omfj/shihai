@@ -1,4 +1,4 @@
-import type { User, Session } from "@/db/schemas";
+import type { User, Session } from "@/storage/db/schemas";
 import { Hono, type Context } from "hono";
 
 export type Bindings = {};

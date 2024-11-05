@@ -1,5 +1,5 @@
-import { db } from "@/db/drizzle";
-import { sessions, users, type Session } from "@/db/schemas";
+import { db } from "@/storage/db/drizzle";
+import { sessions, users, type Session } from "@/storage/db/schemas";
 import type { AnyAppContext } from "@/lib/app";
 import { eq } from "drizzle-orm";
 import { getCookie, setCookie, deleteCookie } from "hono/cookie";

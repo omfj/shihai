@@ -48,7 +48,8 @@
 	</Alert>
 {/if}
 
-<h1 class="text-2xl font-medium mb-4">{data.poll.question}</h1>
+<h1 class="text-2xl font-medium mb-2">{data.poll.question}</h1>
+<p class="text-sm text-gray-500 mb-4">Views: {data.views}</p>
 
 <ul class="flex flex-col gap-2 mb-4">
 	{#each data.poll.options as option}

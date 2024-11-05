@@ -6,6 +6,7 @@ import { createApp } from "./lib/app";
 
 import pollsController from "./controllers/polls.controller";
 import authController from "./controllers/auth.controller";
+import viewsController from "./controllers/views.controller";
 
 const app = createApp();
 
@@ -19,6 +20,7 @@ app.use(
 
 app.route("/", pollsController);
 app.route("/", authController);
+app.route("/", viewsController);
 
 const PORT = 8000;
 

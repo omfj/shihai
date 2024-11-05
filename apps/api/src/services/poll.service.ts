@@ -1,6 +1,6 @@
 import { eq } from "drizzle-orm";
-import { db } from "@/db/drizzle";
-import { polls, type PollInsert } from "@/db/schemas/polls";
+import { db } from "@/storage/db/drizzle";
+import { polls, type PollInsert } from "@/storage/db/schemas/polls";
 
 export class PollService {
   static async findAll() {
