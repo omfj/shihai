@@ -1,0 +1,73 @@
+services:
+  www:
+    image: ghcr.io/omfj/shihai-www:latest
+    ports:
+      - 3000:3000
+    depends_on:
+      - api
+      - db
+      - kv
+    environment:
+      - NODE_ENV=production
+      - VITE_API_URL=http://api:8000
+      - API_KEY=${API_KEY:?API_KEY is required}
+    restart: always
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  api:
+    image: ghcr.io/omfj/shihai-api:latest
+    ports:
+      - 8000:8000
+    environment:
+      - REDIS_HOST=kv
+      - DATABASE_URL=postgres://postgres:postgres@db:5432/shihai
+      - API_KEY=${API_KEY:-foobar}
+    restart: always
+    depends_on:
+      - kv
+      - db
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  kv:
+    image: redis:7.4.1
+    ports:
+      - 6379:6379
+    environment:
+      - REDIS_PASSWORD=redis
+    volumes:
+      - redis_data:/data
+    restart: always
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  db:
+    image: postgres:16
+    ports:
+      - 5432:5432
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=shihai
+    restart: always
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "postgres"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+volumes:
+  redis_data:
+  postgres_data:

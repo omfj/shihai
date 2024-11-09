@@ -1,0 +1,55 @@
+name: 🐳 Build and Publish Docker Images
+
+permissions: write-all
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - apps/www/**
+      - apps/api/**
+      - packages/db/**
+
+  workflow_dispatch:
+
+jobs:
+  www-publish:
+    name: 🌐 Build and Publish WWW
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 🔍 Checkout repository
+        uses: actions/checkout@v3
+
+      - name: 🔑 Log in to GitHub Container Registry
+        uses: docker/login-action@v2
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: 🏗️ Build and push WWW image
+        run: |
+          docker build -t ghcr.io/${{ github.repository }}/shihai-www:latest -f apps/www/Dockerfile .
+          docker push ghcr.io/${{ github.repository }}/shihai-www:latest
+
+  api-publish:
+    name: 🚀 Build and Publish API
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 🔍 Checkout repository
+        uses: actions/checkout@v3
+
+      - name: 🔑 Log in to GitHub Container Registry
+        uses: docker/login-action@v2
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: 🏗️ Build and push API image
+        run: |
+          docker build -t ghcr.io/${{ github.repository }}/shihai-api:latest -f apps/api/Dockerfile .
+          docker push ghcr.io/${{ github.repository }}/shihai-api:latest
