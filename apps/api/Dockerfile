@@ -1,5 +1,8 @@
 FROM node:20-alpine AS base
 
+ARG DATABASE_URL
+ENV DATABASE_URL=${DATABASE_URL}
+
 ENV PNPM_HOME="/pnpm"
 ENV PATH="$PNPM_HOME:$PATH"
 RUN corepack enable
@@ -33,7 +36,15 @@ RUN addgroup --system --gid 1001 nodejs
 RUN adduser --system --uid 1001 api
 USER api
 
-COPY --from=installer --chown=nodejs:api /app/apps/api/dist ./dist
+COPY --from=installer --chown=nodejs:api /app/node_modules ./node_modules
+COPY --from=installer --chown=nodejs:api /app/package.json ./package.json
+COPY --from=installer --chown=nodejs:api /app/apps/api/package.json ./apps/api/package.json
+COPY --from=installer --chown=nodejs:api /app/apps/api/node_modules ./apps/api/node_modules
+COPY --from=installer --chown=nodejs:api /app/apps/api/drizzle.config.ts ./apps/api/drizzle.config.ts
+COPY --from=installer --chown=nodejs:api /app/apps/api/migrations ./apps/api/migrations
+COPY --from=installer --chown=nodejs:api /app/apps/api/scripts ./apps/api/scripts
+COPY --from=installer --chown=nodejs:api /app/apps/api/dist ./apps/api/dist
+COPY --from=installer
 
 EXPOSE 8000/tcp
-CMD node ./dist/main.js
+CMD pnpm --filter=api db:migrate:docker && node ./apps/api/dist/main.js

@@ -1,7 +1,5 @@
 {
   "name": "@shihai/api",
-  "module": "src/main.ts",
-  "type": "module",
   "scripts": {
     "dev": "tsx watch src/main.ts",
     "build": "esbuild src/main.ts --bundle --platform=node --outfile=dist/main.js",
@@ -12,6 +10,7 @@
     "test:unit": "vitest",
     "db:generate": "drizzle-kit generate",
     "db:migrate": "drizzle-kit migrate",
+    "db:migrate:docker": "tsx ./scripts/migrate.ts",
     "db:studio": "drizzle-kit studio",
     "db:dbml": "tsx ./scripts/dbml.ts",
     "clean": "rm -rf .turbo dist node_modules"

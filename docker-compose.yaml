@@ -1,35 +1,23 @@
 services:
-  kv:
+  redis:
     image: redis:7.4.1
+    restart: always
     ports:
       - 6379:6379
-    environment:
-      - REDIS_PASSWORD=redis
     volumes:
       - redis_data:/data
-    restart: always
-    healthcheck:
-      test: ["CMD", "redis-cli", "ping"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
 
   db:
     image: postgres:16
+    restart: always
     ports:
       - 5432:5432
     environment:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
       - POSTGRES_DB=shihai
-    restart: always
     volumes:
       - postgres_data:/var/lib/postgresql/data
-    healthcheck:
-      test: ["CMD", "pg_isready", "-U", "postgres"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
 
 volumes:
   redis_data:

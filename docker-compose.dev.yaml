@@ -1,7 +1,9 @@
 services:
   www:
-    image: ghcr.io/omfj/shihai-www:latest
     restart: unless-stopped
+    build:
+      context: .
+      dockerfile: apps/www/Dockerfile
     ports:
       - 3000:3000
     depends_on:
@@ -10,17 +12,19 @@ services:
       - redis
     environment:
       - VITE_API_URL=http://localhost:8000
-      - API_KEY=SOME_STRONG_SECRET
+      - API_KEY=foobar
 
   api:
-    image: ghcr.io/omfj/shihai-api:latest
-    restart: always
+    restart: unless-stopped
+    build:
+      context: .
+      dockerfile: apps/api/Dockerfile
     ports:
       - 8000:8000
     environment:
       - REDIS_URL=redis://redis:6379
-      - DATABASE_URL=postgres://postgres:SOME_STRONG_DB_PASSWORD@db:5432/shihai
-      - API_KEY=SOME_STRONG_SECRET
+      - DATABASE_URL=postgres://postgres:postgres@db:5432/shihai
+      - API_KEY=foobar
     depends_on:
       - redis
       - db
@@ -36,7 +40,7 @@ services:
     restart: unless-stopped
     environment:
       - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=SOME_STRONG_DB_PASSWORD
+      - POSTGRES_PASSWORD=postgres
       - POSTGRES_DB=shihai
     volumes:
       - postgres_data:/var/lib/postgresql/data

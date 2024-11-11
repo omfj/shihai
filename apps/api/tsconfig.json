@@ -29,6 +29,6 @@
       "@/*": ["./src/*"]
     }
   },
-  "include": ["src", "test", "drizzle.config.ts", "setup.ts"],
+  "include": ["src", "test", "drizzle.config.ts", "vitest.setup.ts"],
   "exclude": ["node_modules"]
 }
