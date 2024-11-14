@@ -2,7 +2,7 @@ import { PGlite } from "@electric-sql/pglite";
 import { drizzle } from "drizzle-orm/pglite";
 import { sql } from "drizzle-orm";
 import { afterAll, afterEach, beforeEach, vi } from "vitest";
-import * as schema from "./src/storage/db/schemas";
+import * as schema from "./src/storage/db/schemas/mod";
 import { db, client } from "./src/storage/db/drizzle";
 import { applyMigrations } from "./src/storage/db/migrate";
 

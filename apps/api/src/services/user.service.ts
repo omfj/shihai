@@ -1,5 +1,5 @@
 import { db } from "@/storage/db/drizzle";
-import { passwords, users, type User } from "@/storage/db/schemas";
+import { passwords, users, type User } from "@/storage/db/schemas/mod";
 import { HashService } from "./hash.service";
 import { nanoid } from "nanoid";
 

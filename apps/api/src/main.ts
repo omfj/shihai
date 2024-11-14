@@ -7,6 +7,12 @@ import { createApp } from "./lib/app";
 import pollsController from "./controllers/polls.controller";
 import authController from "./controllers/auth.controller";
 import viewsController from "./controllers/views.controller";
+import { migrateToLatest } from "./lib/migrate";
+
+if (process.env.NODE_ENV === "production") {
+  console.log("Running in production mode");
+  await migrateToLatest();
+}
 
 const app = createApp();
 
