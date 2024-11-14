@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { VoteOptionInsertSchema } from "../storage/db/schemas";
+import { VoteOptionInsertSchema } from "../storage/db/schemas/mod";
 
 export const CreatePollSchema = z.object({
   question: z.string().min(2),
