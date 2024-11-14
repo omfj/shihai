@@ -38,13 +38,13 @@ USER api
 
 COPY --from=installer --chown=nodejs:api /app/node_modules ./node_modules
 COPY --from=installer --chown=nodejs:api /app/package.json ./package.json
+COPY --from=installer --chown=nodejs:api /app/pnpm-lock.yaml ./pnpm-lock.yaml
+
 COPY --from=installer --chown=nodejs:api /app/apps/api/package.json ./apps/api/package.json
 COPY --from=installer --chown=nodejs:api /app/apps/api/node_modules ./apps/api/node_modules
-COPY --from=installer --chown=nodejs:api /app/apps/api/drizzle.config.ts ./apps/api/drizzle.config.ts
 COPY --from=installer --chown=nodejs:api /app/apps/api/migrations ./apps/api/migrations
-COPY --from=installer --chown=nodejs:api /app/apps/api/scripts ./apps/api/scripts
-COPY --from=installer --chown=nodejs:api /app/apps/api/dist ./apps/api/dist
-COPY --from=installer
 
-EXPOSE 8000/tcp
-CMD pnpm --filter=api db:migrate:docker && node ./apps/api/dist/main.js
+COPY --from=installer --chown=nodejs:api /app/apps/api/dist ./apps/api/dist
+
+EXPOSE 8000
+CMD node ./apps/api/dist/main.js

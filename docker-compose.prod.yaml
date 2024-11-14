@@ -9,7 +9,7 @@ services:
       - db
       - redis
     environment:
-      - VITE_API_URL=http://localhost:8000
+      - PUBLIC_API_URL=http://api:8000
       - API_KEY=SOME_STRONG_SECRET
 
   api:
