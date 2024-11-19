@@ -5,6 +5,7 @@ import { VoteOptionService } from "@/services/vote-option.service";
 import { VoteService } from "@/services/vote.service";
 import { createApp } from "@/lib/app";
 import { isPast } from "date-fns";
+import { publishAnalytics } from "@/messaging";
 
 const app = createApp();
 
@@ -108,6 +109,8 @@ app.post("/poll/:pollId/vote/:optionId", auth(), async (c) => {
   });
 
   const hasVoted = !!vote;
+
+  publishAnalytics(`foo bar, ${hasVoted}`);
 
   if (hasVoted) {
     const isSameOption = vote.voteOptionId === optionId;
