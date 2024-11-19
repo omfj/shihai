@@ -1,12 +1,11 @@
 import { redis } from "@/storage/kv/redis";
 
 export class ViewsService {
-  static async increment(id: string) {
-    await redis.incr(`views:${id}`);
+  static async add(id: string, ip: string) {
+    await redis.sAdd(`views:${id}`, ip);
   }
 
   static async get(id: string) {
-    const views = await redis.get(`views:${id}`);
-    return views ? parseInt(views) : 0;
+    return await redis.sCard(`views:${id}`);
   }
 }

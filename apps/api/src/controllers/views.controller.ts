@@ -12,7 +12,9 @@ app.get("/views/:id", async (c) => {
 
 app.post("/views/:id", async (c) => {
   const { id } = c.req.param();
-  await ViewsService.increment(id);
+  const { ip } = c.var;
+
+  await ViewsService.add(id, ip);
 
   return c.json({ success: true });
 });
