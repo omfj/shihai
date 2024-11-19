@@ -108,11 +108,12 @@ app.post("/poll/:pollId/vote/:optionId", auth(), async (c) => {
     userId,
   });
 
-  const hasVoted = !!vote;
+  publishAnalytics(`foo bar, ${!!vote}`);
 
-  publishAnalytics(`foo bar, ${hasVoted}`);
-
-  if (hasVoted) {
+  /**
+   * Update vote if it exists, delete it if the user is voting for the same option
+   */
+  if (vote) {
     const isSameOption = vote.voteOptionId === optionId;
 
     if (isSameOption) {
@@ -130,6 +131,10 @@ app.post("/poll/:pollId/vote/:optionId", auth(), async (c) => {
 
     return c.text("OK");
   }
+
+  /**
+   * Create a new vote
+   */
 
   await VoteService.create({
     pollId,

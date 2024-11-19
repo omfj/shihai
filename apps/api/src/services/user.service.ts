@@ -1,6 +1,6 @@
+import { hash } from "@/lib/crypto";
 import { db } from "@/storage/db/drizzle";
 import { passwords, users, type User } from "@/storage/db/schemas/mod";
-import { HashService } from "./hash.service";
 import { nanoid } from "nanoid";
 
 export class UserService {
@@ -42,7 +42,7 @@ export class UserService {
     }
 
     const userId = nanoid();
-    const hashedPassword = await HashService.hash(password);
+    const hashedPassword = await hash(password);
 
     const user = await db.transaction(async (tx) => {
       const user = await db

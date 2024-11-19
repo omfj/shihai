@@ -1,10 +1,17 @@
 import { eq } from "drizzle-orm";
 import { db } from "@/storage/db/drizzle";
 import { polls, type PollInsert } from "@/storage/db/schemas/polls";
+import { pollsCache } from "@/lib/caches";
 
 export class PollService {
   static async findAll() {
-    return await db.query.polls
+    const cachedPolls = await pollsCache.get("all");
+
+    if (cachedPolls !== null) {
+      return cachedPolls;
+    }
+
+    const polls = await db.query.polls
       .findMany({
         where: (row, { gt, or, isNull }) =>
           or(gt(row.expiresAt, new Date()), isNull(row.expiresAt)),
@@ -21,6 +28,10 @@ export class PollService {
           votes: row.votes.length,
         })),
       );
+
+    await pollsCache.set("all", polls);
+
+    return polls;
   }
 
   static async find(id: string) {
@@ -48,23 +59,36 @@ export class PollService {
   }
 
   static async create(poll: PollInsert) {
-    return await db
+    const createdPoll = await db
       .insert(polls)
       .values(poll)
       .returning()
       .then((rows) => rows[0]);
+
+    await this.invalidateAllPollsCache();
+
+    return createdPoll;
   }
 
   static async update(id: string, poll: PollInsert) {
-    return await db
+    const updatedPoll = await db
       .update(polls)
       .set(poll)
       .where(eq(polls.id, id))
       .returning()
       .then((rows) => rows[0]);
+
+    await this.invalidateAllPollsCache();
+
+    return updatedPoll;
   }
 
   static async delete(id: string) {
     await db.delete(polls).where(eq(polls.id, id));
+    await this.invalidateAllPollsCache();
+  }
+
+  static async invalidateAllPollsCache() {
+    await pollsCache.delete("all");
   }
 }

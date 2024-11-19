@@ -1,8 +1,8 @@
 import { createApp } from "@/lib/app";
+import { compare } from "@/lib/crypto";
 import { LoginSchema, RegisterSchema } from "@/lib/validators";
 import { admin } from "@/middleware/admin";
 import { auth } from "@/middleware/auth";
-import { HashService } from "@/services/hash.service";
 import { SessionService } from "@/services/session.service";
 import { UserService } from "@/services/user.service";
 
@@ -27,7 +27,7 @@ app.post("/auth/login", async (c) => {
     return c.json({ error: "User not found" }, { status: 404 });
   }
 
-  const isCorrectPassword = await HashService.compare(data.password, user.password.hashedPassword);
+  const isCorrectPassword = await compare(data.password, user.password.hashedPassword);
 
   if (!isCorrectPassword) {
     return c.json({ error: "Invalid password" }, { status: 401 });
