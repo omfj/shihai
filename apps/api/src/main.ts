@@ -8,11 +8,25 @@ import authController from "./controllers/auth.controller";
 import viewsController from "./controllers/views.controller";
 import { migrateToLatest } from "./lib/migrate";
 
+const isProd = process.env.NODE_ENV === "production";
+
+console.log(`
+
+/ ___|| |__ (_) |__   __ _(_)
+\___ \| '_ \| | '_ \ / _\` | |
+ ___) | | | | | | | | (_| | |
+|____/|_| |_|_|_| |_|\__,_|_|
+
+* Environment: ${process.env.NODE_ENV}
+* Database URL: ${process.env.DATABASE_URL}
+* Redis URL: ${process.env.REDIS_URL}
+* Production: ${isProd}
+`);
+
 /**
  * Migrate to the latest version of the database schema when running in production.
  */
 if (process.env.NODE_ENV === "production") {
-  console.log("Running in production mode");
   await migrateToLatest();
 }
 
@@ -21,7 +35,7 @@ const app = createApp();
 app.use(logger());
 app.use(
   cors({
-    origin: ["http://localhost:3000", "http://localhost:5173"],
+    origin: ["http://localhost:3000", "http://localhost:5173", "http://www:3000"],
     credentials: true,
   }),
 );
@@ -30,10 +44,7 @@ app.route("/", pollsController);
 app.route("/", authController);
 app.route("/", viewsController);
 
-// TODO: Make the port configurable
-const PORT = 8000;
-
 serve({
   fetch: app.fetch,
-  port: PORT,
+  port: 8000,
 });
