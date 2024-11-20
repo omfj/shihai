@@ -1,7 +1,7 @@
 import { createMiddleware } from "hono/factory";
 import type { Bindings, Variables } from "@/lib/app";
 import { SessionService } from "@/services/session.service";
-import type { Session, User } from "@/storage/db/schemas/mod";
+import type { User } from "@/storage/db/schemas/mod";
 
 export const auth = () => {
   return createMiddleware<{
@@ -9,7 +9,7 @@ export const auth = () => {
     Variables: Variables & {
       auth: {
         user: User;
-        session: Session;
+        sessionId: string;
       };
     };
   }>(async (c, next) => {
@@ -19,14 +19,14 @@ export const auth = () => {
       return c.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const { session, user } = await SessionService.find(sessionId);
+    const user = await SessionService.findUserBySessionId(sessionId);
 
-    if (!user || !session) {
+    if (!user) {
       return c.json({ error: "Unauthorized" }, { status: 401 });
     }
 
     c.set("auth", {
-      session,
+      sessionId,
       user,
     });
 

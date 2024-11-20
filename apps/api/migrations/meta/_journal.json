@@ -15,6 +15,13 @@
       "when": 1729899097509,
       "tag": "0001_overconfident_logan",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1732122954920,
+      "tag": "0002_polite_iron_monger",
+      "breakpoints": true
     }
   ]
 }

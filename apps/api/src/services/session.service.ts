@@ -1,58 +1,53 @@
 import { db } from "@/storage/db/drizzle";
-import { sessions, users, type Session } from "@/storage/db/schemas/mod";
 import type { AnyAppContext } from "@/lib/app";
-import { eq } from "drizzle-orm";
 import { getCookie, setCookie, deleteCookie } from "hono/cookie";
+import { nanoid } from "nanoid";
+import { redis } from "@/storage/kv/redis";
 
 export const SESSION_COOKIE_NAME = "auth_session";
 
+type Session = {
+  sessionId: string;
+  ttl: number;
+  userId: string;
+};
+
 export class SessionService {
   static async create(userId: string) {
+    const sessionId = nanoid();
     const expiresAt = new Date();
     expiresAt.setDate(expiresAt.getDate() + 7);
+    const ttl = Math.floor((expiresAt.getTime() - Date.now()) / 1000);
 
-    const session = await db
-      .insert(sessions)
-      .values({
-        userId,
-        expiresAt,
-      })
-      .returning()
-      .then((rows) => rows[0]);
-
-    return session;
-  }
-
-  static async find(id: string) {
-    const res = await db
-      .select()
-      .from(sessions)
-      .where(eq(sessions.id, id))
-      .leftJoin(users, eq(sessions.userId, users.id))
-      .then((rows) => rows[0]);
-
-    if (!res) {
-      return {
-        session: null,
-        user: null,
-      };
-    }
-
-    if (!res.session || !res.user) {
-      return {
-        session: null,
-        user: null,
-      };
-    }
+    await redis.setEx(`session:${sessionId}`, ttl, userId);
 
     return {
-      session: res.session,
-      user: res.user,
+      sessionId,
+      ttl,
+      userId,
     };
   }
 
+  static async findUserBySessionId(id: string) {
+    const userId = await redis.get(`session:${id}`);
+
+    if (!userId) {
+      return null;
+    }
+
+    const user = await db.query.users.findFirst({
+      where: (row, { eq }) => eq(row.id, userId),
+    });
+
+    if (!user) {
+      return null;
+    }
+
+    return user;
+  }
+
   static async delete(id: string) {
-    await db.delete(sessions).where(eq(sessions.id, id));
+    await redis.del(`session:${id}`);
   }
 
   static getCookie(c: AnyAppContext) {
@@ -60,8 +55,8 @@ export class SessionService {
   }
 
   static setCookie(c: AnyAppContext, session: Session) {
-    setCookie(c, SESSION_COOKIE_NAME, session.id, {
-      expires: session.expiresAt,
+    setCookie(c, SESSION_COOKIE_NAME, session.sessionId, {
+      expires: new Date(Date.now() + session.ttl * 1000),
       httpOnly: true,
       sameSite: "lax",
       secure: process.env.NODE_ENV === "production",

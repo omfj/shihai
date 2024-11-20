@@ -10,12 +10,6 @@ table poll {
   created_at timestamp [not null, default: `now()`]
 }
 
-table session {
-  id text [pk, not null]
-  user_id text [not null]
-  expires_at timestamp [not null]
-}
-
 table user {
   id text [pk, not null]
   username text [not null]
@@ -46,8 +40,6 @@ table vote {
 }
 
 ref: password.user_id - user.id
-
-ref: session.user_id > user.id
 
 ref: vote_option.poll_id > poll.id
 

@@ -73,7 +73,7 @@ app.post("/auth/register", async (c) => {
 app.post("/auth/session", admin(), async (c) => {
   const json = await c.req.json<{ sessionId: string }>();
 
-  const { user } = await SessionService.find(json.sessionId);
+  const user = await SessionService.findUserBySessionId(json.sessionId);
 
   if (!user) {
     return c.json(null, 404);
@@ -87,7 +87,7 @@ app.post("/auth/session", admin(), async (c) => {
 });
 
 app.post("/auth/logout", auth(), async (c) => {
-  const sessionId = c.var.auth.session.id;
+  const sessionId = c.var.auth.sessionId;
 
   await SessionService.delete(sessionId);
   SessionService.deleteCookie(c);

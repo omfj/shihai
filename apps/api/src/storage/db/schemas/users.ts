@@ -2,7 +2,6 @@ import { pgTable, text, uniqueIndex } from "drizzle-orm/pg-core";
 import { nanoid } from "nanoid";
 import { relations, type InferInsertModel, type InferSelectModel } from "drizzle-orm";
 import { createInsertSchema, createSelectSchema } from "drizzle-zod";
-import { sessions } from "./sessions";
 import { passwords } from "./passwords";
 import { votes } from "./votes";
 import { polls } from "./polls";
@@ -21,7 +20,6 @@ export const users = pgTable(
 );
 
 export const usersRelations = relations(users, ({ one, many }) => ({
-  sessions: many(sessions),
   polls: many(polls),
   votes: many(votes),
   password: one(passwords),
