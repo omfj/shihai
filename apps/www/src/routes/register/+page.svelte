@@ -1,11 +1,11 @@
 <script lang="ts">
 	import { goto, invalidateAll } from '$app/navigation';
-	import { register } from '$lib/api/auth/auth.fetch';
 	import Form from '$lib/components/form/Form.svelte';
 	import FormControlLabel from '$lib/components/form/FormControl/FormControlLabel.svelte';
 	import FormControlRoot from '$lib/components/form/FormControl/FormControlRoot.svelte';
 	import Button from '$lib/components/ui/Button.svelte';
 	import Input from '$lib/components/ui/Input.svelte';
+	import { shihai } from '$lib/shihai';
 	import { createMutation } from '@tanstack/svelte-query';
 	import type { FormEventHandler } from 'svelte/elements';
 
@@ -17,7 +17,7 @@
 	let isMatchingPasswords = $derived.by(() => password === passwordRepeat);
 
 	const registerMutation = createMutation({
-		mutationFn: register
+		mutationFn: shihai.auth.register
 	});
 
 	const handleSubmit: FormEventHandler<HTMLFormElement> = async (e) => {

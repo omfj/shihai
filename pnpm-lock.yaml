@@ -87,6 +87,9 @@ importers:
 
   apps/www:
     dependencies:
+      '@shihai/client':
+        specifier: workspace:*
+        version: link:../../packages/shihai
       '@tanstack/svelte-query':
         specifier: 5.59.13
         version: 5.59.13(svelte@5.0.5)
@@ -160,6 +163,16 @@ importers:
       vitest:
         specifier: 2.1.3
         version: 2.1.3(@types/node@20.16.5)
+
+  packages/shihai:
+    dependencies:
+      ky:
+        specifier: 1.7.2
+        version: 1.7.2
+    devDependencies:
+      typescript:
+        specifier: 5.6.3
+        version: 5.6.3
 
 packages:
 

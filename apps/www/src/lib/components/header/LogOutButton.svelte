@@ -1,9 +1,9 @@
 <script>
 	import { invalidateAll } from '$app/navigation';
-	import { logout } from '$lib/api/auth/auth.fetch';
+	import { shihai } from '$lib/shihai';
 
 	const handleLogout = async () => {
-		await logout();
+		await shihai.auth.logout();
 		await invalidateAll();
 	};
 </script>

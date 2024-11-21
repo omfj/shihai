@@ -1,18 +1,20 @@
-import { getPollById } from '$lib/api/polls/polls.fetch';
 import { error } from '@sveltejs/kit';
 import type { PageLoad } from './$types';
-import { getViews, incrementViews } from '$lib/api/views/views.fetch';
+import { shihai } from '$lib/shihai';
 
 export const load: PageLoad = async ({ params, depends }) => {
 	depends(`poll:${params.id}`);
 
-	const [poll, views] = await Promise.all([getPollById(params.id), getViews(params.id)]);
+	const [poll, views] = await Promise.all([
+		shihai.polls.get.byId(params.id),
+		shihai.views.get(params.id)
+	]);
 
 	if (!poll) {
 		throw error(404, 'Poll not found');
 	}
 
-	incrementViews(params.id);
+	shihai.views.increment(params.id);
 
 	return {
 		poll,
