@@ -1,1 +1,1 @@
-export { createShihai } from "./shihai";
+export { createShihai, type ShihaiOptions } from "./shihai";
