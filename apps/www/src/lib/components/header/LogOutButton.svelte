@@ -1,11 +1,16 @@
 <script>
-	import { enhance } from '$app/forms';
+	import { invalidateAll } from '$app/navigation';
+	import { logout } from '$lib/api/auth/auth.fetch';
+
+	const handleLogout = async () => {
+		await logout();
+		await invalidateAll();
+	};
 </script>
 
 <li>
-	<form action="/logout" method="post" use:enhance>
-		<button class="font-medium text-gray-600 hover:text-gray-900 transition-all px-2"
-			>Log Out</button
-		>
-	</form>
+	<button
+		onclick={handleLogout}
+		class="font-medium text-gray-600 hover:text-gray-900 transition-all px-2">Log Out</button
+	>
 </li>

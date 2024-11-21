@@ -12,7 +12,6 @@ services:
       - redis
     environment:
       - PUBLIC_API_URL=http://localhost:8000
-      - INTENRAL_API_URL=http://api:8000
       - API_KEY=foobar
 
   api:

@@ -2,7 +2,13 @@ import { api } from '../client';
 import type { LoginInput, RegisterInput, User } from './auth.types';
 
 export const getMe = async () => {
-	return await api.get('auth/me').json<User>();
+	const response = await api.get('auth/me');
+
+	if (!response.ok) {
+		return null;
+	}
+
+	return response.json<User>();
 };
 
 export const register = async (input: RegisterInput) => {
@@ -11,4 +17,8 @@ export const register = async (input: RegisterInput) => {
 
 export const login = async (input: LoginInput) => {
 	return await api.post('auth/login', { json: input });
+};
+
+export const logout = async () => {
+	return await api.post('auth/logout');
 };

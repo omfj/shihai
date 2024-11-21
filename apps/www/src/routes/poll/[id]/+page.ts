@@ -1,9 +1,9 @@
 import { getPollById } from '$lib/api/polls/polls.fetch';
 import { error } from '@sveltejs/kit';
-import type { PageServerLoad } from './$types';
+import type { PageLoad } from './$types';
 import { getViews, incrementViews } from '$lib/api/views/views.fetch';
 
-export const load: PageServerLoad = async ({ params, depends }) => {
+export const load: PageLoad = async ({ params, depends }) => {
 	depends(`poll:${params.id}`);
 
 	const [poll, views] = await Promise.all([getPollById(params.id), getViews(params.id)]);

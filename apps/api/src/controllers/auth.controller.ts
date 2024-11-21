@@ -1,7 +1,6 @@
 import { createApp } from "@/lib/app";
 import { compare } from "@/lib/crypto";
 import { LoginSchema, RegisterSchema } from "@/lib/validators";
-import { admin } from "@/middleware/admin";
 import { auth } from "@/middleware/auth";
 import { SessionService } from "@/services/session.service";
 import { UserService } from "@/services/user.service";
@@ -67,22 +66,6 @@ app.post("/auth/register", async (c) => {
 
   return c.json({
     success: true,
-  });
-});
-
-app.post("/auth/session", admin(), async (c) => {
-  const json = await c.req.json<{ sessionId: string }>();
-
-  const user = await SessionService.findUserBySessionId(json.sessionId);
-
-  if (!user) {
-    return c.json(null, 404);
-  }
-
-  return c.json({
-    id: user.id,
-    username: user.username,
-    email: user.email,
   });
 });
 
