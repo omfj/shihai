@@ -1,0 +1,1 @@
+export { createShihai } from "./shihai";

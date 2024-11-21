@@ -1,11 +1,11 @@
 <script lang="ts">
 	import { invalidate } from '$app/navigation';
-	import { votePoll } from '$lib/api/polls/polls.fetch';
-	import { cn } from '$lib/cn.js';
+	import { cn } from '$lib/cn';
 	import Alert from '$lib/components/Alert.svelte';
 	import { getAuthContext } from '$lib/context/auth-context.svelte';
 	import { ThumbsUp } from 'lucide-svelte';
 	import { formatWithTime } from '$lib/date';
+	import { shihai } from '$lib/shihai';
 
 	let { data } = $props();
 
@@ -19,7 +19,7 @@
 	);
 
 	const handleVote = async (voteOptionId: string) => {
-		await votePoll({
+		await shihai.polls.vote({
 			pollId: data.poll.id,
 			voteOptionId
 		});

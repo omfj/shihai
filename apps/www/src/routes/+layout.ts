@@ -1,12 +1,12 @@
 import { browser } from '$app/environment';
 import { QueryClient } from '@tanstack/svelte-query';
 import type { LayoutLoad } from './$types';
-import { getMe } from '$lib/api/auth/auth.fetch';
+import { shihai } from '$lib/shihai';
 
 export const ssr = false;
 
 export const load: LayoutLoad = async () => {
-	const user = await getMe();
+	const user = await shihai.auth.get.me();
 
 	const queryClient = new QueryClient({
 		defaultOptions: {

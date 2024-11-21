@@ -1,6 +1,5 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
-	import { createPoll } from '$lib/api/polls/polls.fetch';
 	import ActionButton from '$lib/components/ActionButton.svelte';
 	import Form from '$lib/components/form/Form.svelte';
 	import FormControlLabel from '$lib/components/form/FormControl/FormControlLabel.svelte';
@@ -12,12 +11,13 @@
 	import { ArrowUp, ArrowDown, X } from 'lucide-svelte';
 	import { flip } from 'svelte/animate';
 	import type { FormEventHandler } from 'svelte/elements';
+	import { shihai } from '$lib/shihai';
 
 	let pollState = new CreatePollState();
 	let error = $state('');
 
 	const pollMutation = createMutation({
-		mutationFn: createPoll
+		mutationFn: shihai.polls.create
 	});
 
 	const handleSubmit: FormEventHandler<HTMLFormElement> = async (e) => {

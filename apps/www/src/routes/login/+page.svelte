@@ -1,6 +1,5 @@
 <script lang="ts">
 	import { goto, invalidateAll } from '$app/navigation';
-	import { login } from '$lib/api/auth/auth.fetch';
 	import Form from '$lib/components/form/Form.svelte';
 	import FormControlLabel from '$lib/components/form/FormControl/FormControlLabel.svelte';
 	import FormControlRoot from '$lib/components/form/FormControl/FormControlRoot.svelte';
@@ -8,12 +7,13 @@
 	import Input from '$lib/components/ui/Input.svelte';
 	import { createMutation } from '@tanstack/svelte-query';
 	import type { FormEventHandler } from 'svelte/elements';
+	import { shihai } from '$lib/shihai';
 
 	let username = $state('');
 	let password = $state('');
 
 	const loginMutation = createMutation({
-		mutationFn: login
+		mutationFn: shihai.auth.login
 	});
 
 	const handleSubmit: FormEventHandler<HTMLFormElement> = async (e) => {
