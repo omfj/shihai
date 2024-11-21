@@ -38,17 +38,21 @@ Shihai, the chinese word for control or dominion, inspired by Dominion Voting Sy
 
 ### Production environment
 
-1. Clone the repository
+1. Clone the repository or just copy `docker-compose.prod.yaml`.
 
-2. Start Docker containers
+2. Update the `environment` variables in the `docker-compose.prod.yaml` to use the appropriate values. I.e update secrets, api urls, etc.
+
+3. Start Docker containers
 
    ```sh
    docker-compose up -d
    ```
 
-3. Database migrations will be run automatically when the environment is set to production.
+4. Database migrations will be run automatically when the environment is set to production.
 
-4. Access the application at [http://localhost:3000](http://localhost:3000)
+5. Access the application at [http://localhost:3000](http://localhost:3000)
+
+6. Update your `Caddyfile` to use the config as in the file [Caddyfile](./etc/Caddyfile)
 
 ## Description of the tech stack
 

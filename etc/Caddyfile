@@ -1,0 +1,7 @@
+api.shihai.omfj.no {
+    reverse_proxy localhost:8000
+}
+
+shihai.omfj.no {
+    reverse_proxy localhost:3000
+}
