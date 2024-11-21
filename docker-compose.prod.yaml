@@ -1,6 +1,6 @@
 services:
   www:
-    image: ghcr.io/omfj/shihai-www:latest
+    image: ghcr.io/omfj/shihai/shihai-www:latest
     restart: unless-stopped
     ports:
       - 3000:3000
@@ -13,7 +13,7 @@ services:
       - API_KEY=SOME_STRONG_SECRET
 
   api:
-    image: ghcr.io/omfj/shihai-api:latest
+    image: ghcr.io/omfj/shihai/shihai-api:latest
     restart: always
     ports:
       - 8000:8000
