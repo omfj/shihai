@@ -63,6 +63,9 @@ importers:
       drizzle-kit:
         specifier: 0.25.0
         version: 0.25.0
+      drizzle-lab:
+        specifier: ^0.7.0
+        version: 0.7.0
       esbuild:
         specifier: 0.24.0
         version: 0.24.0
@@ -2638,6 +2641,12 @@ packages:
       esbuild-register: 3.6.0(esbuild@0.19.12)
     transitivePeerDependencies:
       - supports-color
+    dev: true
+
+  /drizzle-lab@0.7.0:
+    resolution: {integrity: sha512-AHrV6nt/OWKjHoebCZ9sUQSY0fAe/ylKNYlhdUXTc/9pF3YV82MZGoO2qOwvH2qyBJHT0Ho5pXNlsr6qV26r7g==}
+    engines: {node: '>=20.0.0'}
+    hasBin: true
     dev: true
 
   /drizzle-orm@0.34.1(@electric-sql/pglite@0.2.12)(@types/pg@8.11.10)(pg@8.13.0):
