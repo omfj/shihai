@@ -1,0 +1,14 @@
+services:
+  redis:
+    image: redis:7.4.1
+    ports:
+      - 6379:6379
+
+  db:
+    image: postgres:16
+    ports:
+      - 5432:5432
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=benchmark
