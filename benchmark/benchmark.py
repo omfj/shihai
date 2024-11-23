@@ -7,11 +7,12 @@ import matplotlib.pyplot as plt
 from concurrent.futures import ThreadPoolExecutor
 from rich.console import Console
 from rich.table import Table
+from rich.progress import Progress
 
 console = Console()
+progress = Progress()
 
 USER_COUNT = 50000
-GLOBAL_START_TIME = time.perf_counter()
 
 pg_client = psycopg2.connect(
     host="localhost",
@@ -19,31 +20,57 @@ pg_client = psycopg2.connect(
     user="postgres",
     password="postgres"
 )
-redis_client = redis.Redis(host="localhost", port=6379, password=None)
+
+redis_client = redis.Redis(
+    host="localhost",
+    port=6379,
+    password=None
+)
 
 
 def pg_seed():
     pg_cursor = pg_client.cursor()
     pg_cursor.execute(
         "CREATE TABLE IF NOT EXISTS users (id SERIAL PRIMARY KEY, name VARCHAR(255))")
-    pg_cursor.executemany(
-        "INSERT INTO users (name) VALUES (%s)",
-        [("Alice",) for _ in range(USER_COUNT)]
-    )
-    pg_client.commit()
+
+    batch_size = 1000
+    for i in range(0, USER_COUNT, batch_size):
+        pg_cursor.executemany(
+            "INSERT INTO users (name) VALUES (%s)",
+            [("Alice",) for _ in range(batch_size)]
+        )
+        pg_client.commit()
+        progress.update(pg_task_id, advance=batch_size)
+
     pg_cursor.close()
 
 
 def redis_seed():
     pipeline = redis_client.pipeline()
-    for i in range(USER_COUNT):
-        pipeline.set(f"users:{i + 1}", "Alice")
-    pipeline.execute()
+    batch_size = 1000
+    for i in range(0, USER_COUNT, batch_size):
+        for j in range(i, min(i + batch_size, USER_COUNT)):
+            pipeline.set(f"users:{j + 1}", "Alice")
+        pipeline.execute()
+        progress.update(redis_task_id, advance=batch_size)
 
 
 def seed():
-    pg_seed()
-    redis_seed()
+    global pg_task_id, redis_task_id
+
+    with progress:
+        pg_task_id = progress.add_task(
+            "[green]Seeding PostgreSQL...", total=USER_COUNT)
+        redis_task_id = progress.add_task(
+            "[green]Seeding Redis...", total=USER_COUNT)
+
+        with ThreadPoolExecutor() as pool:
+            futures = []
+            futures.append(pool.submit(pg_seed))
+            futures.append(pool.submit(redis_seed))
+
+            for future in futures:
+                future.result()
 
 
 def pg_tear_down():
@@ -78,15 +105,31 @@ def benchmark_task_redis(user_id):
 
 
 def benchmark():
-    with ThreadPoolExecutor() as executor:
-        pg_times = list(executor.map(
-            benchmark_task_pg, (random.randint(1, USER_COUNT)
-                                for _ in range(USER_COUNT))
-        ))
-        redis_times = list(executor.map(
-            benchmark_task_redis, (random.randint(1, USER_COUNT)
-                                   for _ in range(USER_COUNT))
-        ))
+    with progress:
+        pg_task_id = progress.add_task(
+            "[cyan]Benchmarking PostgreSQL...", total=USER_COUNT)
+        redis_task_id = progress.add_task(
+            "[magenta]Benchmarking Redis...", total=USER_COUNT)
+
+        with ThreadPoolExecutor() as pool:
+            pg_futures = [
+                pool.submit(benchmark_task_pg, i + 1) for i in range(USER_COUNT)
+            ]
+            redis_futures = [
+                pool.submit(benchmark_task_redis, i + 1) for i in range(USER_COUNT)
+            ]
+
+            pg_times = []
+            redis_times = []
+
+            for future in pg_futures:
+                pg_times.append(future.result())
+                progress.update(pg_task_id, advance=1)
+
+            for future in redis_futures:
+                redis_times.append(future.result())
+                progress.update(redis_task_id, advance=1)
+
     return pg_times, redis_times
 
 
@@ -141,6 +184,27 @@ def create_aggregate_bar_chart(pg_times, redis_times):
     plt.clf()
 
 
+def create_aggregate_bar_chart_zoomed(pg_times, redis_times):
+    labels = ["Average", "Median", "Fastest"]
+    pg_stats = [np.mean(pg_times), np.median(pg_times),
+                min(pg_times)]
+    redis_stats = [np.mean(redis_times), np.median(
+        redis_times), min(redis_times)]
+
+    x = np.arange(len(labels))
+    width = 0.35
+
+    plt.bar(x - width/2, pg_stats, width, label="PostgreSQL")
+    plt.bar(x + width/2, redis_stats, width, label="Redis")
+    plt.xticks(x, labels)
+    plt.title("Aggregate Latency Statistics Zoomed")
+    plt.ylabel("Latency (seconds)")
+    plt.legend()
+    plt.grid(axis='y')
+    plt.savefig("aggregate_statistics_zoomed.png")
+    plt.clf()
+
+
 def create_latency_over_time(pg_times, redis_times):
     plt.plot(range(len(pg_times)), pg_times, label="PostgreSQL", alpha=0.7)
     plt.plot(range(len(redis_times)), redis_times, label="Redis", alpha=0.7)
@@ -183,23 +247,35 @@ def print_table(pg_times, redis_times):
                   np.median(redis_times):.6f}")
     table.add_row("Fastest", f"{min(pg_times):.6f}", f"{min(redis_times):.6f}")
     table.add_row("Slowest", f"{max(pg_times):.6f}", f"{max(redis_times):.6f}")
+    table.add_row("90th Percentile", f"{np.percentile(pg_times, 90):.6f}", f"{
+                  np.percentile(redis_times, 90):.6f}")
+    table.add_row("95th Percentile", f"{np.percentile(pg_times, 95):.6f}", f"{
+        np.percentile(redis_times, 95):.6f}")
+    table.add_row("99th Percentile", f"{np.percentile(pg_times, 99):.6f}", f"{
+        np.percentile(redis_times, 99):.6f}")
+    table.add_row("Total time", f"{sum(pg_times):.6f}", f"{
+                  sum(redis_times):.6f}")
     console.print(table)
 
 
 if __name__ == "__main__":
-    seed()
-    pg_times, redis_times = benchmark()
+    start = time.perf_counter()
+
+    with progress:
+        seed()
+        pg_times, redis_times = benchmark()
+
     tear_down()
 
     # Create graphs
     create_histogram(pg_times, redis_times)
     create_cdf(pg_times, redis_times)
     create_aggregate_bar_chart(pg_times, redis_times)
+    create_aggregate_bar_chart_zoomed(pg_times, redis_times)
     create_latency_over_time(pg_times, redis_times)
     create_percentile_chart(pg_times, redis_times)
 
     # Print table
     print_table(pg_times, redis_times)
 
-    print(f"Finished benchmark in {
-          time.perf_counter() - GLOBAL_START_TIME} seconds")
+    print(f"Finished benchmark in {time.perf_counter() - start:.2f} seconds")
