@@ -6,6 +6,7 @@
 
 apps/api/dist
 apps/www/build
+benchmark/
 
 docker-compose*
 
