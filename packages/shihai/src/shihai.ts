@@ -6,6 +6,11 @@ import {
   getPolls,
   votePoll,
 } from "./api/polls/polls.fetch";
+import {
+  getPollsCount,
+  getUserCount,
+  getVotesCount,
+} from "./api/stats/stats.fetch";
 import { getViews, incrementViews } from "./api/views/views.fetch";
 
 export type ShihaiOptions = {
@@ -35,6 +40,17 @@ export const createShihai = (options: ShihaiOptions) => {
     views: {
       get: getViews(api),
       increment: incrementViews(api),
+    },
+    stats: {
+      users: {
+        count: getUserCount(api),
+      },
+      votes: {
+        count: getVotesCount(api),
+      },
+      polls: {
+        count: getPollsCount(api),
+      },
     },
   };
 };

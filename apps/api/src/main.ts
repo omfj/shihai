@@ -3,11 +3,12 @@ import { serve } from "@hono/node-server";
 import { logger } from "hono/logger";
 import { cors } from "hono/cors";
 import { createApp } from "./lib/app";
+import { migrateToLatest } from "./lib/migrate";
+import { setupMessaging } from "./messaging";
 import pollsController from "./controllers/polls.controller";
 import authController from "./controllers/auth.controller";
 import viewsController from "./controllers/views.controller";
-import { migrateToLatest } from "./lib/migrate";
-import { setupMessaging } from "./messaging";
+import statsController from "./controllers/stats.controller";
 
 const isProd = process.env.NODE_ENV === "production";
 
@@ -46,6 +47,7 @@ app.use(
 app.route("/", pollsController);
 app.route("/", authController);
 app.route("/", viewsController);
+app.route("/", statsController);
 
 serve({
   fetch: app.fetch,
