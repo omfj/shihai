@@ -1,7 +1,7 @@
 export type ViewIncrement = {
-	success: true;
+  success: true;
 };
 
 export type ViewCount = {
-	views: number;
+  views: number;
 };

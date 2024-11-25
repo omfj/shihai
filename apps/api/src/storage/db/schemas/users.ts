@@ -1,10 +1,11 @@
-import { pgTable, text, uniqueIndex } from "drizzle-orm/pg-core";
+import { pgTable, text, uniqueIndex, pgEnum } from "drizzle-orm/pg-core";
 import { nanoid } from "nanoid";
 import { relations, type InferInsertModel, type InferSelectModel } from "drizzle-orm";
 import { createInsertSchema, createSelectSchema } from "drizzle-zod";
 import { passwords } from "./passwords";
 import { votes } from "./votes";
 import { polls } from "./polls";
+import { roleEnum } from "./enums";
 
 export const users = pgTable(
   "user",
@@ -12,6 +13,7 @@ export const users = pgTable(
     id: text().notNull().primaryKey().$defaultFn(nanoid),
     username: text().notNull(),
     email: text().notNull(),
+    role: roleEnum().notNull().default("user"),
   },
   (table) => ({
     usernameUnique: uniqueIndex("username_unique").on(table.username),
