@@ -1,0 +1,1 @@
+ALTER TABLE "poll" ADD COLUMN "user_id" text NOT NULL;

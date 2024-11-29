@@ -2,6 +2,7 @@ import { and, eq } from "drizzle-orm";
 import { db } from "@/storage/db/drizzle";
 import { votes, type VoteInsert } from "@/storage/db/schemas/mod";
 import { PollService } from "./poll.service";
+import { publishVotesTotal } from "@/messaging";
 
 type VotePrimaryKey = {
   pollId: string;
@@ -18,6 +19,7 @@ export class VoteService {
   static async create(vote: VoteInsert) {
     await db.insert(votes).values(vote);
     await PollService.invalidateAllPollsCache();
+    publishVotesTotal(vote.pollId, "increment");
   }
 
   static async update(vote: VoteInsert) {
@@ -31,5 +33,6 @@ export class VoteService {
   static async delete({ pollId, userId }: VotePrimaryKey) {
     await db.delete(votes).where(and(eq(votes.pollId, pollId), eq(votes.userId, userId)));
     await PollService.invalidateAllPollsCache();
+    publishVotesTotal(pollId, "decrement");
   }
 }

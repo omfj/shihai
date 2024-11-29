@@ -11,6 +11,7 @@ table password {
 table poll {
   id text [pk, not null]
   question text [not null]
+  userId text [not null]
   expires_at timestamp
   created_at timestamp [not null, default: `now()`]
 }
@@ -46,6 +47,8 @@ table vote {
 }
 
 ref: password.user_id - user.id
+
+ref: poll.userId > user.id
 
 ref: vote_option.poll_id > poll.id
 

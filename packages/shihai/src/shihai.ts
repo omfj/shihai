@@ -2,8 +2,10 @@ import { getMe, login, logout, register } from "./api/auth/auth.fetch";
 import { createApi } from "./api/client";
 import {
   createPoll,
+  deletePoll,
   getPollById,
   getPolls,
+  updatePoll,
   votePoll,
 } from "./api/polls/polls.fetch";
 import {
@@ -28,6 +30,8 @@ export const createShihai = (options: ShihaiOptions) => {
       },
       create: createPoll(api),
       vote: votePoll(api),
+      update: updatePoll(api),
+      delete: deletePoll(api),
     },
     auth: {
       get: {

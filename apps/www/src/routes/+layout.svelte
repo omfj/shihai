@@ -15,9 +15,9 @@
 </script>
 
 <QueryClientProvider client={data.queryClient}>
-	<div class="bg-gray-200 sm:p-4 flex flex-col min-h-screen">
+	<div class="bg-gray-200 sm:p-4 flex flex-col h-screen overflow-hidden">
 		<div
-			class="flex flex-col overflow-hidden sm:rounded-lg flex-1 w-full max-w-screen-sm mx-auto bg-white sm:shadow-lg sm:border-4 border-gray-400"
+			class="flex flex-col overflow-auto sm:rounded-lg flex-1 w-full max-w-screen-sm mx-auto bg-white sm:shadow-lg sm:border-4 border-gray-400"
 		>
 			<Header />
 			<div class="flex-1 px-4">

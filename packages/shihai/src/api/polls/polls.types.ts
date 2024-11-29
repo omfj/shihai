@@ -2,6 +2,7 @@ export type SimplePoll = {
   id: string;
   question: string;
   votes: number;
+  userId: string;
   createdAt: string;
   expiresAt: string | null;
 };
@@ -10,6 +11,18 @@ export type CreatePollInput = {
   question: string;
   expiresAt: string | null;
   options: Array<string>;
+};
+
+export type UpdatePollInput = {
+  id: string;
+  poll: {
+    question: string;
+    expiresAt: string | null;
+    options: Array<{
+      id: string | null;
+      caption: string;
+    }>;
+  };
 };
 
 export type CreatePollResult =
@@ -38,6 +51,7 @@ export type Poll = {
   id: string;
   question: string;
   expiresAt: string | null;
+  userId: string;
   createdAt: string;
   options: Array<VoteOption>;
   votes: Array<Vote>;

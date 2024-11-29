@@ -1,23 +1,34 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
 	import ActionButton from '$lib/components/ActionButton.svelte';
+	import Alert from '$lib/components/Alert.svelte';
 	import Form from '$lib/components/form/Form.svelte';
 	import FormControlLabel from '$lib/components/form/FormControl/FormControlLabel.svelte';
 	import FormControlRoot from '$lib/components/form/FormControl/FormControlRoot.svelte';
 	import Button from '$lib/components/ui/Button.svelte';
 	import Input from '$lib/components/ui/Input.svelte';
-	import { CreatePollState } from '$lib/states/create-poll-state.svelte';
+	import { shihai } from '$lib/shihai';
+	import { CreatePollState } from '$lib/states/create-poll-state.svelte.js';
 	import { createMutation } from '@tanstack/svelte-query';
-	import { ArrowUp, ArrowDown, X } from 'lucide-svelte';
+	import { ArrowDown, ArrowUp, X } from 'lucide-svelte';
 	import { flip } from 'svelte/animate';
 	import type { FormEventHandler } from 'svelte/elements';
-	import { shihai } from '$lib/shihai';
 
-	let pollState = new CreatePollState();
+	let { data } = $props();
+
+	let oldOptions = data.poll.options.map((option) => option.id);
 	let error = $state('');
+	let pollState = new CreatePollState({
+		question: data.poll.question,
+		expiresAt: data.poll.expiresAt?.split(':').slice(0, 2).join(':'),
+		options: data.poll.options.map((option) => ({
+			id: option.id,
+			value: option.caption
+		}))
+	});
 
 	const pollMutation = createMutation({
-		mutationFn: shihai.polls.create
+		mutationFn: shihai.polls.update
 	});
 
 	const handleSubmit: FormEventHandler<HTMLFormElement> = async (e) => {
@@ -25,12 +36,18 @@
 
 		const optionsWithoutEmpty = pollState.options
 			.filter((option) => option.value.trim() !== '')
-			.map((option) => option.value);
+			.map((option) => ({
+				id: oldOptions.includes(option.id) ? option.id : null,
+				caption: option.value
+			}));
 
 		const result = await $pollMutation.mutateAsync({
-			question: pollState.question,
-			expiresAt: pollState.expiresAt ? new Date(pollState.expiresAt).toUTCString() : null,
-			options: optionsWithoutEmpty
+			id: data.poll.id,
+			poll: {
+				question: pollState.question,
+				expiresAt: pollState.expiresAt ? new Date(pollState.expiresAt).toUTCString() : null,
+				options: optionsWithoutEmpty
+			}
 		});
 
 		if (result.success === true) {
@@ -42,16 +59,14 @@
 </script>
 
 <svelte:head>
-	{#if !pollState.question}
-		<title>Create a poll</title>
-	{:else}
-		<title>Creating - {pollState.question}...</title>
-	{/if}
+	<title>Edit - {data.poll.question}</title>
 </svelte:head>
 
 {#if error}
-	<p class="text-center text-red-500">{error}</p>
+	<Alert>{error}</Alert>
 {/if}
+
+<h1 class="text-2xl font-medium mb-2">Editing - {data.poll.question}</h1>
 
 <Form onsubmit={handleSubmit}>
 	<FormControlRoot>
@@ -76,6 +91,7 @@
 				<X />
 			</ActionButton>
 		</div>
+		<span>{pollState.expiresAt}</span>
 		<span class="text-gray-500 text-sm">Optional field if you want the form to expire.</span>
 	</FormControlRoot>
 
@@ -121,9 +137,5 @@
 		{/each}
 	</ul>
 
-	<span class="text-gray-500 text-sm"
-		>Note: The last (empty) option will be omitted when the poll is created.</span
-	>
-
-	<Button type="submit">Create poll</Button>
+	<Button type="submit">Save</Button>
 </Form>

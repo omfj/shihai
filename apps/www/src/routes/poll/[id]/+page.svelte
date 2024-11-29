@@ -1,11 +1,13 @@
 <script lang="ts">
-	import { invalidate } from '$app/navigation';
+	import { goto, invalidate } from '$app/navigation';
 	import { cn } from '$lib/cn';
 	import Alert from '$lib/components/Alert.svelte';
 	import { getAuthContext } from '$lib/context/auth-context.svelte';
 	import { ThumbsUp } from 'lucide-svelte';
 	import { formatWithTime } from '$lib/date';
 	import { shihai } from '$lib/shihai';
+	import Button from '$lib/components/ui/Button.svelte';
+	import ButtonLink from '$lib/components/ui/ButtonLink.svelte';
 
 	let { data } = $props();
 
@@ -17,6 +19,7 @@
 	let hasExpired = $derived(
 		data.poll.expiresAt ? new Date(data.poll.expiresAt) < new Date() : false
 	);
+	let isOwner = $derived(data.poll.userId === auth.user?.id);
 
 	const handleVote = async (voteOptionId: string) => {
 		await shihai.polls.vote({
@@ -29,6 +32,15 @@
 
 	const countVotes = (voteOptionId: string) => {
 		return data.poll.votes.filter((vote) => vote.voteOptionId === voteOptionId).length;
+	};
+
+	const handleDelete = async () => {
+		const result = await shihai.polls.delete(data.poll.id);
+
+		// @ts-expect-error idk why this is not working
+		if (result.success) {
+			goto('/');
+		}
 	};
 </script>
 
@@ -80,7 +92,18 @@
 	{/each}
 </ul>
 
-<div class="flex flex-col text-sm text-gray-600">
+<div class="flex flex-col text-sm text-gray-600 mb-4">
 	<p>Created at: {formatWithTime(data.poll.createdAt)}</p>
 	<p>Expires at: {data.poll.expiresAt ? formatWithTime(data.poll.expiresAt) : 'Never'}</p>
 </div>
+
+{#if isOwner}
+	<div class="flex flex-col gap-2">
+		<h2 class="font-medium text-lg">Poll actions</h2>
+
+		<div class="flex items-center gap-2">
+			<ButtonLink href="/poll/{data.poll.id}/edit">Edit</ButtonLink>
+			<Button onclick={handleDelete}>Delete</Button>
+		</div>
+	</div>
+{/if}

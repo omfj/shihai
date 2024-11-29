@@ -12,6 +12,19 @@ Shihai, the chinese word for control or dominion, inspired by Dominion Voting Sy
 - pnpm v8.7.0
 - Docker v27.x.x
 
+### Docker images
+
+You can pull the images from the GitHub Container Registry.
+
+```sh
+# Website
+docker pull ghcr.io/omfj/shihai/shihai-www:latest
+# API
+docker pull ghcr.io/omfj/shihai/shihai-api:latest
+```
+
+If you want to know how to set up a production environment, see the [Production environment](#production-environment) section.
+
 ### Development environment
 
 1. Clone the repository
@@ -53,4 +66,3 @@ Shihai, the chinese word for control or dominion, inspired by Dominion Voting Sy
 5. Access the application at [http://localhost:3000](http://localhost:3000)
 
 6. Update your `Caddyfile` to use the config as in the file [Caddyfile](./etc/Caddyfile)
-

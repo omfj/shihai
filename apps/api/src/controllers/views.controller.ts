@@ -1,4 +1,5 @@
 import { createApp } from "@/lib/app";
+import { publishIncrementViews } from "@/messaging";
 import { ViewsService } from "@/services/views.service";
 
 const app = createApp();
@@ -14,7 +15,7 @@ app.post("/views/:id", async (c) => {
   const { id } = c.req.param();
   const { ip } = c.var;
 
-  await ViewsService.add(id, ip);
+  publishIncrementViews(id, ip);
 
   return c.json({ success: true });
 });

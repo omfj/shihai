@@ -1,10 +1,21 @@
 import { z } from "zod";
-import { VoteOptionInsertSchema } from "../storage/db/schemas/mod";
 
 export const CreatePollSchema = z.object({
   question: z.string().min(2),
   expiresAt: z.coerce.date().nullable(),
   options: z.string().array().min(2),
+});
+
+export const UpdatePollSchema = z.object({
+  question: z.string().min(2),
+  expiresAt: z.coerce.date().nullable(),
+  options: z
+    .object({
+      id: z.string().nullable(),
+      caption: z.string(),
+    })
+    .array()
+    .min(2),
 });
 
 export const LoginSchema = z.object({

@@ -20,7 +20,7 @@
 		<span class="font-medium text-2xl">{pollsCount}</span>
 	</div>
 	<div class="flex flex-col items-center justify-center border rounded-lg p-2 w-full">
-		<span class="text-sm">Number of polls:</span>
+		<span class="text-sm">Number of votes:</span>
 		<span class="font-medium text-2xl">{votesCount}</span>
 	</div>
 </div>

@@ -24,6 +24,7 @@ export class PollService {
           id: row.id,
           question: row.question,
           createdAt: row.createdAt,
+          userId: row.userId,
           expiresAt: row.expiresAt,
           votes: row.votes.length,
         })),
