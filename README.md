@@ -1,3 +1,5 @@
+> Project for DAT250 at HVL.
+
 # SHIHAI - The world's most advanced polling system
 
 ## Introduction
